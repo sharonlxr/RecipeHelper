@@ -26,6 +26,9 @@ var constants = {
 };
 
 var welcomeMsg = "recipe assistant, what recipe would you like to make?";
+var inmiddleofsteps = " you are in the middle of recipe, quit before you want something else";
+var norecipe = "I can not find the recipe of ";
+
 function buildparam(name){
 	var par = {
 
@@ -53,6 +56,7 @@ function queryRecipe(rename){
 	});
 
 }
+
 
 exports.handler = function(event, context, callback) {
     var alexa = Alexa.handler(event, context);
@@ -88,7 +92,36 @@ var newSessionHandlers = {
         this.attributes['repromptSpeech'] = constants["HELP_REPROMPT"];
         this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech'])
     },
+    'queryIntent': function() {
+      var recname = this.event.request.intent.slots.recipeName.value;
+      var data = queryRecipe(recname);
+      if(data !=null){
+        var name = data['name'];
+        var steps = data['steps'].split('\n');
+        var ingredients = data['ingredients'].split('\n');
+        var stepsnum = steps.length;
+        var ingrenum = ingredients.length;
+        var msg = " I have found the recipe of "+name;
+        msg+=". what do you want to do next?";
+        this.attributes['steps']=steps;
+        this.attributes['ingredients']= ingredients;
+        this.attributes['stepnum']=stepnum;
+        this.attributes['ingrenum']= ingrenum;
+        this.attributes['step'] = 0;
+        this.attributes['ingre']= 0;
+        this.handler.state=states.WAITMODE;
+        this.emit(":ask",msg);
+      }else{
+        this.attributes['stepnum']=0;
+        this.attributes['ingrenum']= 0;
+        this.attributes['step'] = -1;
+        this.attributes['ingre']=-1;
+        var msg = norecipe+recname;
+        this.emit(":tell",msg);
 
+      }
+
+    },
     "AMAZON.StopIntent": function() {
       this.emit(':tell', "Goodbye!");  
     },
@@ -130,6 +163,7 @@ var StartHandlers = Alexa.CreateStateHandler(states.STARTMODE, {
       	this.attributes['ingrenum']= ingrenum;
       	this.attributes['step'] = 0;
         this.attributes['ingre']= 0;
+        this.attributes['name'] = recname;
       	this.handler.state=states.WAITMODE;
       	this.emit(":ask",msg);
       }else{
@@ -137,7 +171,10 @@ var StartHandlers = Alexa.CreateStateHandler(states.STARTMODE, {
       	this.attributes['ingrenum']= 0;
       	this.attributes['step'] = -1;
         this.attributes['ingre']=-1;
-        var msg = "I can not find the recipe of "+recname;
+        this.attributes['name'] = null;
+        this.attributes['steps'] = null;
+        this.attributes['ingredients']=null;
+        var msg = norecipe+recname;
         this.emit(":tell",msg);
 
       }
@@ -228,7 +265,18 @@ var WaitingHandlers = Alexa.CreateStateHandler(states.WAITMODE, {
       		this.emit(':tell',msg);
       	}
 
-    }
+    },
+    'quitIntent':function(){
+      console.log("CANCELINTENT");
+      this.handler.state = states.STARTMODE;
+      this.attributes['step'] = -1;
+      this.attributes['ingre']=-1;
+      
+      this.attributes['stepnum']=0;
+      this.attributes['ingrenum']= 0;
+
+      this.emit(':tell', "You are done with this recipe!");  
+    },
     // 'AMAZON.YesIntent': function() {
     //     this.attributes["guessNumber"] = Math.floor(Math.random() * 100);
     //     this.handler.state = states.GUESSMODE;
@@ -325,7 +373,17 @@ var RecipeHandlers = Alexa.CreateStateHandler(states.RECIPEMODE, {
       		this.emit(':tell',msg);
       	}
    	}
+    'quitIntent':function(){
+      console.log("CANCELINTENT");
+      this.handler.state = states.STARTMODE;
+      this.attributes['step'] = -1;
+    this.attributes['ingre']=-1;
+    
+    this.attributes['stepnum']=0;
+    this.attributes['ingrenum']= 0;
 
+      this.emit(':tell', "You are done with this recipe!");  
+    },
     "AMAZON.StopIntent": function() {
       console.log("STOPINTENT");
       this.handler.state = states.STARTMODE;
@@ -446,7 +504,18 @@ var IngreHandlers = Alexa.CreateStateHandler(states.INGREDIENTMODE, {
       		}
       		this.emit(':tell',msg);
       	}
-   	}
+   	},
+     'quitIntent':function(){
+      console.log("CANCELINTENT");
+      this.handler.state = states.STARTMODE;
+      this.attributes['step'] = -1;
+    this.attributes['ingre']=-1;
+    
+    this.attributes['stepnum']=0;
+    this.attributes['ingrenum']= 0;
+
+      this.emit(':tell', "You are done with this recipe!");  
+    },
 
     "AMAZON.StopIntent": function() {
 	      console.log("STOPINTENT");
