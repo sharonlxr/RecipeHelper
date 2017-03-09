@@ -27,21 +27,21 @@ var constants = {
 
 var welcomeMsg = "recipe assistant, what recipe would you like to make?";
 function buildparam(name){
-	var par = {
+    var par = {
 
-	 	TableName: recipeTable,
-	    Key:{
-	        "name": name,
-	        // "title": title
-	    }
-	};
+    TableName: recipeTable,
+      Key:{
+        "name": name,
+        // "title": title
+      }
+    };
 
-	return par;
+    return par;
 }
 function queryRecipe(rename){
-	var para = buildparam(rename);
-	var docClient = new AWS.DynamoDB.DocumentClient();
-	docClient.get(para, function(err, data) {
+    var para = buildparam(rename);
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    docClient.get(para, function(err, data) {
     
     if (err) {
         console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
@@ -50,7 +50,7 @@ function queryRecipe(rename){
         console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
         return data;
     }
-	});
+    });
 
 }
 
@@ -63,10 +63,10 @@ exports.handler = function(event, context, callback) {
 };
 
 var states ={
-	STARTMODE:"start",
-	WAITMODE:"WAITING",
-	RECIPEMODE:"reading recipes",
-	INGREDIENTMODE:"ingre"
+    STARTMODE:"start",
+    WAITMODE:"WAITING",
+    RECIPEMODE:"reading recipes",
+    INGREDIENTMODE:"ingre"
 
 
 };
@@ -77,7 +77,7 @@ var newSessionHandlers = {
             this.attributes['ingre']=-1;
             
             this.attributes['stepnum']=0;
-      		this.attributes['ingrenum']= 0;
+            this.attributes['ingrenum']= 0;
             // this.attributes['gamesPlayed'] = 0;
         }
         this.handler.state = states.STARTMODE;
@@ -86,14 +86,14 @@ var newSessionHandlers = {
     'AMAZON.HelpIntent': function () {
         this.attributes['speechOutput'] = constants["HELP_MESSAGE"];
         this.attributes['repromptSpeech'] = constants["HELP_REPROMPT"];
-        this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech'])
+        this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech']);
     },
 
     "AMAZON.StopIntent": function() {
-      this.emit(':tell', "Goodbye!");  
+      this.emit(':tell', "Goodbye!");
     },
     "AMAZON.CancelIntent": function() {
-      this.emit(':tell', "Goodbye!");  
+      this.emit(':tell', "Goodbye!");
     },
     'SessionEndedRequest': function () {
         console.log('session ended!');
@@ -106,38 +106,39 @@ var StartHandlers = Alexa.CreateStateHandler(states.STARTMODE, {
         this.emit('NewSession'); // Uses the handler in newSessionHandlers
     },
     // 'whatToDoIntent':function(){
-    // 	var msg = "You can respond with";
+    //  var msg = "You can respond with";
     // }
     'AMAZON.HelpIntent': function () {
         this.attributes['speechOutput'] = constants["HELP_MESSAGE"];
         this.attributes['repromptSpeech'] = constants["HELP_REPROMPT"];
-        this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech'])
+        this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptSpeech']);
     },
     'queryIntent': function() {
       var recname = this.event.request.intent.slots.recipeName.value;
       var data = queryRecipe(recname);
-      if(data !=null){
-      	var name = data['name'];
-      	var steps = data['steps'].split('\n');
-      	var ingredients = data['ingredients'].split('\n');
-      	var stepsnum = steps.length;
-      	var ingrenum = ingredients.length;
-      	var msg = " I have found the recipe of "+name;
-      	msg+=". what do you want to do next?";
-      	this.attributes['steps']=steps;
-      	this.attributes['ingredients']= ingredients;
-      	this.attributes['stepnum']=stepnum;
-      	this.attributes['ingrenum']= ingrenum;
-      	this.attributes['step'] = 0;
+      var msg = "";
+      if(data !== null){
+        var name = data['name'];
+        var steps = data['steps'].split('\n');
+        var ingredients = data['ingredients'].split('\n');
+        var stepsnum = steps.length;
+        var ingrenum = ingredients.length;
+        msg = " I have found the recipe of "+name;
+        msg+=". what do you want to do next?";
+        this.attributes['steps']=steps;
+        this.attributes['ingredients']= ingredients;
+        this.attributes['stepnum']=stepnum;
+        this.attributes['ingrenum']= ingrenum;
+        this.attributes['step'] = 0;
         this.attributes['ingre']= 0;
-      	this.handler.state=states.WAITMODE;
-      	this.emit(":ask",msg);
+        this.handler.state=states.WAITMODE;
+        this.emit(":ask",msg);
       }else{
-      	this.attributes['stepnum']=0;
-      	this.attributes['ingrenum']= 0;
-      	this.attributes['step'] = -1;
+        this.attributes['stepnum']=0;
+        this.attributes['ingrenum']= 0;
+        this.attributes['step'] = -1;
         this.attributes['ingre']=-1;
-        var msg = "I can not find the recipe of "+recname;
+        msg = "I can not find the recipe of "+recname;
         this.emit(":tell",msg);
 
       }
@@ -154,11 +155,11 @@ var StartHandlers = Alexa.CreateStateHandler(states.STARTMODE, {
     // },
     "AMAZON.StopIntent": function() {
       console.log("STOPINTENT");
-      this.emit(':tell', "Goodbye!");  
+      this.emit(':tell', "Goodbye!");
     },
     "AMAZON.CancelIntent": function() {
       console.log("CANCELINTENT");
-      this.emit(':tell', "Goodbye!");  
+      this.emit(':tell', "Goodbye!");
     },
     'SessionEndedRequest': function () {
         console.log("SESSIONENDEDREQUEST");
@@ -171,6 +172,7 @@ var StartHandlers = Alexa.CreateStateHandler(states.STARTMODE, {
         this.emit(':tell', message, message);
     }
 });
+
 var WaitingHandlers = Alexa.CreateStateHandler(states.WAITMODE, {
     'NewSession': function () {
         this.emit('NewSession'); // Uses the handler in newSessionHandlers
@@ -180,55 +182,54 @@ var WaitingHandlers = Alexa.CreateStateHandler(states.WAITMODE, {
       this.attributes['ingre']=0;
       var msg ="";
       
-      	var stepindex = 0;
-      	if(this.attributes['stepnum']==0){
-      		msg="there is no steps available";
-      		this.emit(":tell",msg);
+      var stepindex = 0;
+      if(this.attributes['stepnum']===0){
+        msg="there is no steps available";
+        this.emit(":tell",msg);
 
-      	}else{
-	      	var stepw= this.attributes['steps'][stepindex];
-	      	msg = stepw;
-	      	stepw = stepw.trim();
-	      	if(stepw == ""||stepw==''||stepindex+1>=this.attributes['stepnum'])
-	      		{	msg = "there is no step available for this recipe.";
-	      			this.attributes['step'] = 0;
-	      			this.emit(":tell",msg);
-	      		}else{
-			      	this.attributes['step'] = stepindex+1;
-			      	this.handler.state = states.RECIPEMODE;
-			      	this.emit(":tell",msg);
-			      }
-      	}
+      }else{
+        var stepw= this.attributes['steps'][stepindex];
+        msg = stepw;
+        stepw = stepw.trim();
+        if (stepw === ""||stepw===''||stepindex+1>=this.attributes['stepnum']) {
+          msg = "there is no step available for this recipe.";
+          this.attributes['step'] = 0;
+          this.emit(":tell",msg);
+        }else{
+          this.attributes['step'] = stepindex+1;
+          this.handler.state = states.RECIPEMODE;
+          this.emit(":tell",msg);
+        }
+      }
 
     },
     'ingredientsIntent':function(){
-    	var msg ="";
-      	var ingres = this.attributes['ingredients'];
-      	var total = this.attributes['ingrenum'];
-      	if(0>=totalStep){
-      		msg = "there is no ingredients available";
-      		msg+=" . You have reached the last ingredients. ";
-  			msg+="We will begin recipe direction. Say start if you are ready.";
-      			
-  			this.handler.state = states.RECIPEMODE;
-  			this.attributes['step']=0;
+        var msg ="";
+        var ingres = this.attributes['ingredients'];
+        var total = this.attributes['ingrenum'];
+        if(0>=totalStep){
+          msg = "there is no ingredients available";
+          msg+=" . You have reached the last ingredients. ";
+        msg+="We will begin recipe direction. Say start if you are ready.";
+        
+        this.handler.state = states.RECIPEMODE;
+        this.attributes['step']=0;
  
-      		this.emit(':tell',msg,msg);
-      	}else{
-      		msg = ingres[total-1];
-      		this.attributes['ingre'] = index+1;
-      		this.handler.state = states.INGREDIENTMODE;
-      		if(total==1){
-	  			msg+=" . You have reached the last ingredients. ";
-	  			msg+="We will begin recipe direction. Say start if you are ready.";
-	      		this.attributes['ingre']=0;	
-	  			this.handler.state = states.RECIPEMODE;
-	  			this.attributes['step']=0;
-  			}
-      		this.emit(':tell',msg);
-      	}
-
-    }
+          this.emit(':tell',msg,msg);
+        }else{
+          msg = ingres[total-1];
+          this.attributes['ingre'] = index+1;
+          this.handler.state = states.INGREDIENTMODE;
+          if(total==1){
+            msg+=" . You have reached the last ingredients. ";
+            msg+="We will begin recipe direction. Say start if you are ready.";
+            this.attributes['ingre']=0;
+            this.handler.state = states.RECIPEMODE;
+            this.attributes['step']=0;
+          }
+          this.emit(':tell',msg);
+        }
+    },
     // 'AMAZON.YesIntent': function() {
     //     this.attributes["guessNumber"] = Math.floor(Math.random() * 100);
     //     this.handler.state = states.GUESSMODE;
@@ -240,11 +241,11 @@ var WaitingHandlers = Alexa.CreateStateHandler(states.WAITMODE, {
     // },
     "AMAZON.StopIntent": function() {
       console.log("STOPINTENT");
-      this.emit(':tell', "Goodbye!");  
+      this.emit(':tell', "Goodbye!");
     },
     "AMAZON.CancelIntent": function() {
       console.log("CANCELINTENT");
-      this.emit(':tell', "Goodbye!");  
+      this.emit(':tell', "Goodbye!");
     },
     'SessionEndedRequest': function () {
         console.log("SESSIONENDEDREQUEST");
@@ -262,91 +263,83 @@ var RecipeHandlers = Alexa.CreateStateHandler(states.RECIPEMODE, {
     'NewSession': function () {
         this.emit('NewSession'); // Uses the handler in newSessionHandlers
     },
-   	'nextIntent':function(){
-   		 var msg ="";
-      	var stepindex = this.attributes['step'];
-      	var totalStep = this.attributes['stepnum'];
-      	if(stepindex>=totalStep){
-      		msg = "you have reached the end of the steps";
-      		this.attributes['step']=0;
-      		this.handler.state = states.WAITMODE;
-      		this.emit(':tell',msg,msg);
-      	}else{
-      		var msg = this.attributes['steps'][stepindex];
-      		this.attributes['step'] = stepindex+1;
-      		if(stepindex+1 == totalStep){
-      			this.attributes['step']=0;
-      			msg+=" . You have reached the last step.";
-      			this.handler.state = states.WAITMODE;
-
-      		}
-
-      		this.emit(':tell',msg);
-      	}
-
-
-   	}
+    'nextIntent':function(){
+        var msg ="";
+        var stepindex = this.attributes['step'];
+        var totalStep = this.attributes['stepnum'];
+        if(stepindex>=totalStep){
+          msg = "you have reached the end of the steps";
+          this.attributes['step']=0;
+          this.handler.state = states.WAITMODE;
+          this.emit(':tell',msg,msg);
+        }else{
+          msg = this.attributes['steps'][stepindex];
+          this.attributes['step'] = stepindex+1;
+          if(stepindex+1 == totalStep){
+            this.attributes['step']=0;
+            msg+=" . You have reached the last step.";
+            this.handler.state = states.WAITMODE;
+          }
+          this.emit(':tell',msg);
+        }
+    },
  
-   	'lastStepIntent':function(){
-   		var msg ="";
-      	var steps = this.attributes['steps'];
-      	var totalStep = this.attributes['stepnum'];
-      	if(0>=totalStep){
-      		msg = "there is no direction available";
-      		this.handler.state = states.WAITMODE;
-      		this.emit(':tell',msg,msg);
-      	}else{
-      		msg = steps[totalStep-1];
-      		this.attributes['step'] = 0 ;
-      		
-  			msg+=" . You have reached the last step.";
-  			this.handler.state = states.WAITMODE;
+    'lastStepIntent':function(){
+        var msg ="";
+        var steps = this.attributes['steps'];
+        var totalStep = this.attributes['stepnum'];
+        if(0>=totalStep){
+          msg = "there is no direction available";
+          this.handler.state = states.WAITMODE;
+          this.emit(':tell',msg,msg);
+        }else{
+          msg = steps[totalStep-1];
+          this.attributes['step'] = 0 ;
+          msg+=" . You have reached the last step.";
+          this.handler.state = states.WAITMODE;
+          this.emit(':tell',msg);
+        }
+    },
+    'startAgain':function(){
+        var msg ="";
+        var stepindex = 0;
+        var totalStep = this.attributes['stepnum'];
+        if(stepindex>=totalStep){
+          msg = "you have reached the end of the steps";
+          this.emit(':tell',msg,msg);
+          this.handler.state = states.WAITMODE;
+        }else{
+          msg = this.attributes['steps'][stepindex];
+          this.attributes['step'] = stepindex+1;
+          if(stepindex+1 == totalStep){
+            msg+=" . You have reached the last step.";
+            this.handler.state = states.WAITMODE;
 
-      		
-      		this.emit(':tell',msg);
-      	}
-   	}
-   	'startAgain':function(){
-   		var msg ="";
-      	var stepindex = 0;
-      	var totalStep = this.attributes['stepnum'];
-      	if(stepindex>=totalStep){
-      		msg = "you have reached the end of the steps";
-      		this.emit(':tell',msg,msg);
-      		this.handler.state = states.WAITMODE;
-      	}else{
-      		var msg = this.attributes['steps'][stepindex];
-      		this.attributes['step'] = stepindex+1;
-      		if(stepindex+1 == totalStep){
-      			msg+=" . You have reached the last step.";
-      			this.handler.state = states.WAITMODE;
-
-      		}
-      		this.emit(':tell',msg);
-      	}
-   	}
-
+        }
+        this.emit(':tell',msg);
+        }
+    },
     "AMAZON.StopIntent": function() {
       console.log("STOPINTENT");
       this.handler.state = states.STARTMODE;
       this.attributes['step'] = -1;
-    this.attributes['ingre']=-1;
-    
-    this.attributes['stepnum']=0;
-		this.attributes['ingrenum']= 0;
+      this.attributes['ingre']=-1;
+      
+      this.attributes['stepnum']=0;
+      this.attributes['ingrenum']= 0;
 
-      this.emit(':tell', "You are done with this recipe!");  
+      this.emit(':tell', "You are done with this recipe!");
     },
     "AMAZON.CancelIntent": function() {
       console.log("CANCELINTENT");
       this.handler.state = states.STARTMODE;
       this.attributes['step'] = -1;
-    this.attributes['ingre']=-1;
-    
-    this.attributes['stepnum']=0;
-		this.attributes['ingrenum']= 0;
+      this.attributes['ingre']=-1;
+      
+      this.attributes['stepnum']=0;
+      this.attributes['ingrenum']= 0;
 
-      this.emit(':tell', "You are done with this recipe!");  
+      this.emit(':tell', "You are done with this recipe!");
     },
     'SessionEndedRequest': function () {
         console.log("SESSIONENDEDREQUEST");
@@ -361,103 +354,97 @@ var RecipeHandlers = Alexa.CreateStateHandler(states.RECIPEMODE, {
 });
 var IngreHandlers = Alexa.CreateStateHandler(states.INGREDIENTMODE, {
   
-   	'nextIntent':function(){
-   		 var msg ="";
-      	var index = this.attributes['ingre'];
-      	var total= this.attributes['ingrenum'];
-      	var ingres = this.attributes['ingredients'];
-      	if(index>=total){
-      		msg="You have reached the end of the ingredients. We will begin recipe direction. Say start or next if you are ready.";
-      			this.emit(':tell',msg,msg);
-	      		this.handler.state = states.RECIPEMODE;
-	      		this.attributes['ingre']=0;
-	      		this.attributes['step']=0;
-	      	
-	      		this.emit(':tell',msg);
+    'nextIntent':function(){
+        var msg ="";
+        var index = this.attributes['ingre'];
+        var total= this.attributes['ingrenum'];
+        var ingres = this.attributes['ingredients'];
+        if(index>=total){
+          msg="You have reached the end of the ingredients. We will begin recipe direction. Say start or next if you are ready.";
+          this.emit(':tell',msg,msg);
+          this.handler.state = states.RECIPEMODE;
+          this.attributes['ingre']=0;
+          this.attributes['step']=0;
+          this.emit(':tell',msg);
+        }else{
+          msg = ingres[index];
+          if(index+1 == total){
+            msg+=" . You have reached the end of the ingredients. We will begin recipe direction. Say start or next if you are ready.";
+            
+            this.handler.state = states.RECIPEMODE;
+            this.attributes['ingre']=0;
+            this.attributes['step']=0;
+            
+            this.emit(':tell',msg);
 
+          }else{
+            this.attributes['ingre']=index+1;
+            this.emit(':tell',msg);
+          }
+        }
+    },
+    'lastIngreIntent':function(){
+        var msg ="";
+        var ingres = this.attributes['ingredients'];
+        var total = this.attributes['ingrenum'];
+        if(0>=totalStep){
+          msg+=" . You have reached the end of the ingredients. We will begin recipe direction. Say start or next if you are ready.";
+            
+          this.handler.state = states.RECIPEMODE;
+          this.attributes['ingre']=0;
+          this.attributes['step']=0;
+          
+          this.emit(':tell',msg);
+        }else{
+          msg = ingres[total-1];
+          this.attributes['ingre'] = index+1;
+        
+          msg+=" . You have reached the last ingredients. ";
+          msg+="We will begin recipe direction. Say start if you are ready.";
+          
+          this.handler.state = states.RECIPEMODE;
+          this.attributes['step']=0;
+          this.emit(':tell',msg);
+        }
+    },
+    'startAgain':function(){
+        var msg ="";
+        var ingres = this.attributes['ingredients'];
+        var total = this.attributes['ingrenum'];
+        var index = 0;
+        if(index>=totalStep){
 
-      	}else{
-      		var msg = ingres[index];
-      		if(index+1 == total){
-      			msg+=" . You have reached the end of the ingredients. We will begin recipe direction. Say start or next if you are ready.";
-      			
-	      		this.handler.state = states.RECIPEMODE;
-	      		this.attributes['ingre']=0;
-	      		this.attributes['step']=0;
-	      	
-	      		this.emit(':tell',msg);
+        msg+=" . You have reached the end of the ingredients. We will begin recipe direction. Say start or next if you are ready.";
+          
+        this.handler.state = states.RECIPEMODE;
+        this.attributes['ingre']=0;
+        this.attributes['step']=0;
+        
+        this.emit(':tell',msg);
+        }else{
+        msg = ingres[index];
+        this.attributes['ingre'] = index+1;
+        if(index+1 == totalStep){
+          msg+=" . You have reached the last ingredients. ";
+          msg+="We will begin recipe direction. Say start if you are ready.";
+          this.handler.state = states.RECIPEMODE;
+          this.attributes['step']=0;
+          this.attributes['ingre']=0;
 
-      		}else{
-      			this.attributes['ingre']=index+1;
-      			this.emit(':tell',msg);
-      		}
-      	}
-
-
-   	}
-   	'lastIngreIntent':function(){
-   		var msg ="";
-      	var ingres = this.attributes['ingredients'];
-      	var total = this.attributes['ingrenum'];
-      	if(0>=totalStep){
-      		msg+=" . You have reached the end of the ingredients. We will begin recipe direction. Say start or next if you are ready.";
-      			
-      		this.handler.state = states.RECIPEMODE;
-      		this.attributes['ingre']=0;
-      		this.attributes['step']=0;
-      	
-      		this.emit(':tell',msg);
-      	}else{
-      		msg = ingres[total-1];
-      		this.attributes['ingre'] = index+1;
-      	
-  			msg+=" . You have reached the last ingredients. ";
-  			msg+="We will begin recipe direction. Say start if you are ready.";
-      			
-  			this.handler.state = states.RECIPEMODE;
-  			this.attributes['step']=0;
-      		this.emit(':tell',msg);
-      	}
-   	}
-   	'startAgain':function(){
-   		var msg ="";
-      	var ingres = this.attributes['ingredients'];
-      	var total = this.attributes['ingrenum'];
-      	var index = 0;
-      	if(index>=totalStep){
-
-      		msg+=" . You have reached the end of the ingredients. We will begin recipe direction. Say start or next if you are ready.";
-      			
-      		this.handler.state = states.RECIPEMODE;
-      		this.attributes['ingre']=0;
-      		this.attributes['step']=0;
-      	
-      		this.emit(':tell',msg);
-      	}else{
-      		var msg = ingres[index];
-      		this.attributes['ingre'] = index+1;
-      		if(index+1 == totalStep){
-      			msg+=" . You have reached the last ingredients. ";
-  				msg+="We will begin recipe direction. Say start if you are ready.";
-      			this.handler.state = states.RECIPEMODE;
-      			this.attributes['step']=0;
-      			this.attributes['ingre']=0;
-
-      		}
-      		this.emit(':tell',msg);
-      	}
-   	}
-
+        }
+        this.emit(':tell',msg);
+        }
+    },
     "AMAZON.StopIntent": function() {
-	      console.log("STOPINTENT");
-	      this.handler.state = states.STARTMODE;
-	      this.attributes['step'] = -1;
-    	this.attributes['ingre']=-1;
+      console.log("STOPINTENT");
+      this.handler.state = states.STARTMODE;
+      this.attributes['step'] = -1;
+      this.attributes['ingre']=-1;
     
-    	this.attributes['stepnum']=0;
-		this.attributes['ingrenum']= 0;
+      this.attributes['stepnum']=0;
+      this.attributes['ingrenum']= 0;
 
-      this.emit(':tell', "You are done with this recipe!");  
+      this.emit(':tell', "You are done with this recipe!");
     },
     "AMAZON.CancelIntent": function() {
       console.log("CANCELINTENT");
@@ -466,9 +453,9 @@ var IngreHandlers = Alexa.CreateStateHandler(states.INGREDIENTMODE, {
     this.attributes['ingre']=-1;
     
     this.attributes['stepnum']=0;
-		this.attributes['ingrenum']= 0;
+        this.attributes['ingrenum']= 0;
 
-      this.emit(':tell', "You are done with this recipe!");  
+      this.emit(':tell', "You are done with this recipe!");
     },
     'SessionEndedRequest': function () {
         console.log("SESSIONENDEDREQUEST");
