@@ -1,0 +1,9 @@
+queryIntent Find {recipeName}
+queryIntent I'd like to make {recipeName}
+queryIntent How do I make {recipeName}
+queryIntent What should I do for {recipeName}
+AMAZON.HelpIntent Help
+AMAZON.HelpIntent What can I say
+SessionEndedRequest Exit
+SessionEndedRequest Quit
+SessionEndedRequest Goodbye
