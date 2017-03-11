@@ -233,3 +233,59 @@ skillService.intent('backToMainIntent',{
 		response.send();
 		}
 	);
+skillService.intent('startOverIntent',{
+	'utterances':['start again']
+		},
+	function(request,response){
+
+		var stg =getStageHelperFromRequest(request);
+		var msg ;
+		var recipe_helper = getRecipeHelperFromRequest(request);
+		if(stg==INGREDIENT){
+			recipe_helper.currentIngre = 0;
+			if(recipe_helper.completeIngre()){
+				msg = "you are done with ingredients. Move on to recipe direction";
+				recipe_helper.currentStep = 0;
+				response.say(msg);
+				response.shouldEndSession(false);
+				response.session(STAGE_KEY,DIRECTION);
+				response.session(SESSION_KEY,recipe_helper);
+				response.send();
+			}else{
+				msg = recipe_helper.ingredients[0];
+				recipe_helper.currentIngre++;
+				response.say(msg);
+				response.shouldEndSession(false);
+				response.session(STAGE_KEY,INGREDIENT);
+				response.session(SESSION_KEY,recipe_helper);
+				response.send();
+
+			}
+
+
+		}else if (stg == DIRECTION){
+			recipe_helper.currentStep = 0 ;
+			if(recipe_helper.complete()){
+				msg = "you are done with this recipe.";
+				// recipe_helper.currentStep = 0;
+				response.say(msg);
+				response.shouldEndSession(false);
+				response.session(STAGE_KEY,DIRECTION);
+				response.session(SESSION_KEY,recipe_helper);
+				response.send();
+			}else{
+				msg = recipe_helper.steps[0];
+				recipe_helper.currentStep++;
+				response.say(msg);
+				response.shouldEndSession(false);
+				response.session(STAGE_KEY,DIRECTION);
+				response.session(SESSION_KEY,recipe_helper);
+				response.send();
+
+			}
+		}else{
+			handleInvalidCommand(request,response);
+		}
+		
+		}
+	);
