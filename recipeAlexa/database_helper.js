@@ -1,5 +1,5 @@
 'use strict';
-module.change_code = 1;
+// module.change_code = 1;
 var _ = require('lodash');
 var table_name = "recipes";
 var url = "https://cp8h9t2lqh.execute-api.us-east-1.amazonaws.com/prod/rewshandler";
@@ -10,7 +10,7 @@ var localCredentials = {
 };
 var localDB = require('dynasty')(localCredentials, url);
 var db = localDB;
-function recipeHelper(){}
+function recipeHelper(){};
 var recipeTable = function() {
 	return db.table(table_name);
 };
