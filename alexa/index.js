@@ -1,14 +1,14 @@
 var AWS = require("aws-sdk");
-var fs = require('fs');
+// var fs = require('fs');
 AWS.config.update({
     region: "us-east-1",
-    endpoint: "http://dynamodb:us-east-1:612224096706:table/recipes"
+    endpoint: "https://cp8h9t2lqh.execute-api.us-east-1.amazonaws.com/prod/rewshandler"
 });
 
 
 
 var docClient = new AWS.DynamoDB.DocumentClient();
-var recipeTable = "recipes";
+var recipeTable = "Recipes";
 var constants = {
         "RECIPES": {"apple pie" : "Buy it from Safeway"},
         "SKILL_NAME": "Recipe",
@@ -94,32 +94,33 @@ var newSessionHandlers = {
     },
     'queryIntent': function() {
       var recname = this.event.request.intent.slots.recipeName.value;
-      var data = queryRecipe(recname);
-      if(data !=null){
-        var name = data['name'];
-        var steps = data['steps'].split('\n');
-        var ingredients = data['ingredients'].split('\n');
-        var stepsnum = steps.length;
-        var ingrenum = ingredients.length;
-        var msg = " I have found the recipe of "+name;
-        msg+=". what do you want to do next?";
-        this.attributes['steps']=steps;
-        this.attributes['ingredients']= ingredients;
-        this.attributes['stepnum']=stepnum;
-        this.attributes['ingrenum']= ingrenum;
-        this.attributes['step'] = 0;
-        this.attributes['ingre']= 0;
-        this.handler.state=states.WAITMODE;
-        this.emit(":ask",msg);
-      }else{
-        this.attributes['stepnum']=0;
-        this.attributes['ingrenum']= 0;
-        this.attributes['step'] = -1;
-        this.attributes['ingre']=-1;
-        var msg = norecipe+recname;
-        this.emit(":tell",msg);
+      this.enit(':tell', recname);
+      // var data = queryRecipe(recname);
+      // if(data !==null){
+      //   var name = data['name'];
+      //   var steps = data['steps'].split('\n');
+      //   var ingredients = data['ingredients'].split('\n');
+      //   var stepsnum = steps.length;
+      //   var ingrenum = ingredients.length;
+      //   var msg = " I have found the recipe of "+name;
+      //   msg+=". what do you want to do next?";
+      //   this.attributes['steps']=steps;
+      //   this.attributes['ingredients']= ingredients;
+      //   this.attributes['stepnum']=stepnum;
+      //   this.attributes['ingrenum']= ingrenum;
+      //   this.attributes['step'] = 0;
+      //   this.attributes['ingre']= 0;
+      //   this.handler.state=states.WAITMODE;
+      //   this.emit(":ask",msg);
+      // }else{
+      //   this.attributes['stepnum']=0;
+      //   this.attributes['ingrenum']= 0;
+      //   this.attributes['step'] = -1;
+      //   this.attributes['ingre']=-1;
+      //   msg = norecipe+recname;
+      //   this.emit(":tell",msg);
 
-      }
+      // }
 
     },
     "AMAZON.StopIntent": function() {
@@ -149,13 +150,14 @@ var StartHandlers = Alexa.CreateStateHandler(states.STARTMODE, {
     'queryIntent': function() {
       var recname = this.event.request.intent.slots.recipeName.value;
       var data = queryRecipe(recname);
-      if(data !=null){
+      var msg;
+      if(data !==null){
       	var name = data['name'];
       	var steps = data['steps'].split('\n');
       	var ingredients = data['ingredients'].split('\n');
       	var stepsnum = steps.length;
       	var ingrenum = ingredients.length;
-      	var msg = " I have found the recipe of "+name;
+      	msg = " I have found the recipe of "+name;
       	msg+=". what do you want to do next?";
       	this.attributes['steps']=steps;
       	this.attributes['ingredients']= ingredients;
@@ -174,7 +176,7 @@ var StartHandlers = Alexa.CreateStateHandler(states.STARTMODE, {
         this.attributes['name'] = null;
         this.attributes['steps'] = null;
         this.attributes['ingredients']=null;
-        var msg = norecipe+recname;
+        msg = norecipe+recname;
         this.emit(":tell",msg);
 
       }
@@ -333,7 +335,7 @@ var RecipeHandlers = Alexa.CreateStateHandler(states.RECIPEMODE, {
       	}
 
 
-   	}
+   	},
  
    	'lastStepIntent':function(){
    		var msg ="";
@@ -353,7 +355,7 @@ var RecipeHandlers = Alexa.CreateStateHandler(states.RECIPEMODE, {
       		
       		this.emit(':tell',msg);
       	}
-   	}
+   	},
    	'startAgain':function(){
    		var msg ="";
       	var stepindex = 0;
@@ -372,7 +374,7 @@ var RecipeHandlers = Alexa.CreateStateHandler(states.RECIPEMODE, {
       		}
       		this.emit(':tell',msg);
       	}
-   	}
+   	},
     'quitIntent':function(){
       console.log("CANCELINTENT");
       this.handler.state = states.STARTMODE;
@@ -452,7 +454,7 @@ var IngreHandlers = Alexa.CreateStateHandler(states.INGREDIENTMODE, {
       	}
 
 
-   	}
+   	},
    	'lastIngreIntent':function(){
    		var msg ="";
       	var ingres = this.attributes['ingredients'];
@@ -476,7 +478,7 @@ var IngreHandlers = Alexa.CreateStateHandler(states.INGREDIENTMODE, {
   			this.attributes['step']=0;
       		this.emit(':tell',msg);
       	}
-   	}
+   	},
    	'startAgain':function(){
    		var msg ="";
       	var ingres = this.attributes['ingredients'];
