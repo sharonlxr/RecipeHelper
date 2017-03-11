@@ -269,7 +269,7 @@ skillService.intent('backToMainIntent',{
 		var recipe_helper = resetHelper();
 		response.say(msg);
 		response.shouldEndSession(false);
-		response.session(STAGE_KEY,stg);
+		response.session(STAGE_KEY,START);
 		response.session(SESSION_KEY,recipe_helper);
 		response.send();
 		}
