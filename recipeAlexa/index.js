@@ -81,6 +81,10 @@ skillService.intent('queryIntent', {
 
 
 	},function(request,response){
+	
+
+
+	
 	var recname = request.slot("recipeName");
 	databaseHelper.readRecipeData(recname).then(function(result){
 		if(result === undefined){
@@ -105,22 +109,39 @@ skillService.intent('queryIntent', {
 		}
 
 	}).then(function(data){
-		if(data===null){
-			var msg= "Can not find the recipe";
-			response.say(msg);
-			response.session(STAGE_KEY,START);
+		var currentstg = getStageHelperFromRequest(request);
+		if(currentstg == WAIT||currentstg == INGREDIENT||currentstg == DIRECTION){
+			console.log("can not query because we are in a recipe now");
+			var reply = "you should quit current recipe first";
+			response.say(reply);
+			response.session(STAGE_KEY,currentstg);
 			response.shouldEndSession(false);
-			response.session(SESSION_KEY,resetHelper());
+			response.session(SESSION_KEY,getRecipeHelperFromRequest(request));
 			response.send();
-			
+
+
 		}else{
-			var newHelper = buildNewHelperWithData(data,request,response);
-			response.say("I have successfully found recipe of "+ data["RecipeName"]);
-			response.session(STAGE_KEY,WAIT);
-			response.shouldEndSession(false);
-			response.session(SESSION_KEY,newHelper);
-			response.send();
+		
+			if(data===null){
+				console.log("can not find the recipe and back to start");
+				var msg= "Can not find the recipe";
+				response.say(msg);
+				response.session(STAGE_KEY,START);
+				response.shouldEndSession(false);
+				response.session(SESSION_KEY,resetHelper());
+				response.send();
+				
+			}else{
+				console.log("we load another recipe ");
+				var newHelper = buildNewHelperWithData(data,request,response);
+				response.say("I have successfully found recipe of "+ data["RecipeName"]);
+				response.session(STAGE_KEY,WAIT);
+				response.shouldEndSession(false);
+				response.session(SESSION_KEY,newHelper);
+				response.send();
+			}
 		}
+		
 
 	});
 	return false;
