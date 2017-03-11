@@ -17,9 +17,16 @@ recipeHelper.prototype.completeIngre = function(){
 recipeHelper.prototype.getStep = function(){
 	return this.steps[this.currentStep];
 };
+recipeHelper.prototype.setSteps = function(stps){
+	return this.steps = stps;
+};
 recipeHelper.prototype.setCurrentStep =function(index){
 	this.currentStep = index;
+};
+recipeHelper.prototype.setIngres =function(ingres){
+	this.ingredients = ingres;
 };
 recipeHelper.prototype.setCurrentIngre = function(index){
 	this.currentIngre = index;
 };
+module.exports = recipeHelper;
