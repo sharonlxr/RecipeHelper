@@ -214,6 +214,7 @@ skillService.intent('lastIngreIntent', {
 		recipe_helper.currentIngre = recipe_helper.ingedient.length-1;
 		msg = recipe_helper.ingedient[recipe_helper.currentIngre];
 		recipe_helper.currentIngre++;
+		recipe_helper.currentStep=0;
 		response.session(SESSION_KEY,recipe_helper);
 		response.session(STAGE_KEY,DIRECTION);
 		response.say(msg);
