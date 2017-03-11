@@ -1,0 +1,29 @@
+{
+  "session": {
+    "sessionId": "SessionId.7a16be2a-a03b-4cde-93ea-8e2895c3c853",
+    "application": {
+      "applicationId": "amzn1.ask.skill.6cd8b4e6-8d6d-423f-bc45-9d46e8ce076f"
+    },
+    "attributes": {},
+    "user": {
+      "userId": "amzn1.ask.account.AF46DI2FI2473FLEFMWPGIMONXESQ3WMZKVC3IQHNRG3APK5TNHR2CZJUBTDE7R7Z5B2CK22QP5EBWGWP2QLTNHOV5LHK2UZLV4SULSKWIENMB7LDUWLSGKIGP32VLANBHEYMJHDLJ2T5N3QJWSSNJ3ICPWFHLOFXCEZQVVPN5FSCIDIVRR32B3NE5ODMM5PM4CSUGXCVDVOHUI"
+    },
+    "new": true
+  },
+  "request": {
+    "type": "IntentRequest",
+    "requestId": "EdwRequestId.9e28a676-8b4b-4562-8638-828854fb2a4e",
+    "locale": "en-US",
+    "timestamp": "2017-03-11T11:53:03Z",
+    "intent": {
+      "name": "queryIntent",
+      "slots": {
+        "recipeName": {
+          "name": "recipeName",
+          "value": "bacon and eggs"
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

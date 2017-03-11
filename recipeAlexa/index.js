@@ -28,14 +28,18 @@ var resetHelper = function(){
 	return new recipeHelper(argument);
 };
 var buildNewHelperWithData = function(data){
-	argument = {};
-	var helper = recipeHelper(argument);
-	var stps = data["steps"].split("\n");
-	var ingres = data["ingredients"].split("\n");
-	helper.currentStep=0;
-	helper.currentIngre =0 ;
-	helper.steps = stps;
-	helper.ingredients = ingres;
+	var argument = {};
+	var helper = getRecipeHelper(argument);
+	var stps = data["Directions"].split("\n");
+	var ingres = data["Ingredients"].split("\n");
+	helper.setCurrentStep(0);
+	// recipeHelper.currentStep=0;
+	helper.setCurrentIngre(0);
+	// helper.currentIngre =0 ;
+	helper.setSteps(stps);
+	// helper.steps = stps;
+	helper.setIngres(ingres);
+	// helper.ingredients = ingres;
 	return helper;
 
 }
@@ -71,25 +75,37 @@ skillService.launch(function(request,response){
 
 
 skillService.intent('queryIntent', {
-	'slot':{"recipeName":"listOfRecipes"},
-	'utterances':['I want to make a {recipeName}']
+	'slots':{"recipeName":"listOfRecipes"},
+	'utterances':['I want to make {a|} {-|recipeName}']
 
 	},function(request,response){
 	var recname = request.slot("recipeName");
 	databaseHelper.readRecipeData(recname).then(function(result){
 		if(result === undefined){
 			console.log("result is empty");
-			return null;
+			return {};
 		}else{
-		console.log("JSON.parse(result['data'])");
-        console.log(JSON.parse(result['data']));
-        return JSON.parse(result['data']);
+		console.log("JSON.parse(result)");
+		console.log(result);
+		// result = result.replace(/\\n/g, "\\n")  
+        //        .replace(/\\'/g, "\\'")
+        //        .replace(/\\"/g, '\\"')
+        //        .replace(/\\&/g, "\\&")
+        //        .replace(/\\r/g, "\\r")
+        //        .replace(/\\t/g, "\\t")
+        //        .replace(/\\b/g, "\\b")
+        //        .replace(/\\f/g, "\\f");
+		// result = toString(result);
+		// console.log(result);
+	    // console.log(JSON.parse(result));
+        // return JSON.parse(result);
+		return result
 		}
 
 	}).then(function(data){
 		if(data!=null){
 			var newHelper = buildNewHelperWithData(data,request,response);
-			response.say("I have successfully found recipe of "+recname);
+			response.say("I have successfully found recipe of "+ data["RecipeName"]);
 			response.session(STAGE_KEY,WAIT);
 			response.shouldEndSession(false);
 			response.session(SESSION_KEY,newHelper);
@@ -104,7 +120,7 @@ skillService.intent('queryIntent', {
 		}
 
 	});
-
+	return false;
 
 }
 
@@ -185,7 +201,7 @@ skillService.intent('lastIngreIntent', {
 );
 
 skillService.intent('advanceIngreIntent', {
-    'utterances': ['next INGREDIENT','ingedient']
+    'utterances': ['next INGREDIENT','ingredient']
   },
   function(request, response) {
   	var stg = getStageHelperFromRequest(request);
@@ -289,3 +305,6 @@ skillService.intent('startOverIntent',{
 		
 		}
 	);
+module.exports = skillService;
+// console.log(skillService.utterances());
+// console.log(skillService.schema());
