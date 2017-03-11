@@ -85,7 +85,7 @@ skillService.intent('queryIntent', {
 	databaseHelper.readRecipeData(recname).then(function(result){
 		if(result === undefined){
 			console.log("result is empty");
-			return {};
+			return null;
 		}else{
 		console.log("JSON.parse(result)");
 		console.log(result);
@@ -105,19 +105,20 @@ skillService.intent('queryIntent', {
 		}
 
 	}).then(function(data){
-		if(data!=null&&data!={}){
-			var newHelper = buildNewHelperWithData(data,request,response);
-			response.say("I have successfully found recipe of "+ data["RecipeName"]);
-			response.session(STAGE_KEY,WAIT);
-			response.shouldEndSession(false);
-			response.session(SESSION_KEY,newHelper);
-			response.send();
-		}else{
+		if(data===null){
 			var msg= "Can not find the recipe";
 			response.say(msg);
 			response.session(STAGE_KEY,START);
 			response.shouldEndSession(false);
 			response.session(SESSION_KEY,resetHelper());
+			response.send();
+			
+		}else{
+			var newHelper = buildNewHelperWithData(data,request,response);
+			response.say("I have successfully found recipe of "+ data["RecipeName"]);
+			response.session(STAGE_KEY,WAIT);
+			response.shouldEndSession(false);
+			response.session(SESSION_KEY,newHelper);
 			response.send();
 		}
 
