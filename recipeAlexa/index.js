@@ -59,7 +59,7 @@ var handleInvalidCommand = function(request,response){
 	response.session(SESSION_KEY,recipe_helper);
 	response.send();
 };
-var welcomeMsg = "Welcome to recipe helper! What do you want to make today";
+var welcomeMsg = "Welcome to recipe helper! What do you want to make today?";
 
 skillService.launch(function(request,response){
 
@@ -72,7 +72,7 @@ skillService.launch(function(request,response){
 
 skillService.intent('queryIntent', {
 	'slot':{"recipeName":"listOfRecipes"},
-	'utterances':['I want to make a {recipeName}']
+	'utterances':["I'd like to make a {recipeName}"]
 
 	},function(request,response){
 	var recname = request.slot("recipeName");
@@ -87,7 +87,7 @@ skillService.intent('queryIntent', {
 		}
 
 	}).then(function(data){
-		if(data!=null){
+		if(data!=null&&data!={}){
 			var newHelper = buildNewHelperWithData(data,request,response);
 			response.say("I have successfully found recipe of "+recname);
 			response.session(STAGE_KEY,WAIT);

@@ -1,6 +1,6 @@
 'use strict';
 module.change_code = 1;
-var _ = require('lodash');
+// var _ = require('lodash');
 var Skill = require('alexa-app');
 var CAKE_BAKER_SESSION_KEY = 'cake_baker';
 var skillService = new Skill.app('cakebaker');
