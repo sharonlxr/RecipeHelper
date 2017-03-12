@@ -9,7 +9,7 @@ var START  = "Start";
 var WAIT = "WAIT";
 var	DIRECTION ="DIRECTION";
 var INGREDIENT ="INGREDIENT";
-var DONE = "DONE";
+// var DONE = "DONE";
 
 var skillService = new Skill.app('cakebaker');
 var recipeHelper = require('./recipe_helper');
@@ -150,31 +150,42 @@ skillService.intent('queryIntent', {
 
 );
 skillService.intent('advanceStepIntent', {
-    'utterances': ['next step']
+    'utterances': ['next step','read recipe']
   },
   function(request, response) {
   	var stg = getStageHelperFromRequest(request);
-	if(stg !=DIRECTION||stg!=WAIT){
+	if(stg !=DIRECTION&&stg!=WAIT&&stg!=INGREDIENT){
 		handleInvalidCommand(request,response);
 	}else{
 		var recipe_helper = getRecipeHelperFromRequest(request);
 		var msg = "";
+		recipe_helper.currentIngre =0;
 		if(recipe_helper.complete()){
-			msg = " you have finished this recipe. please restart or quit.";
+			msg = " . you have finished this recipe. please restart or quit.";
 			response.say(msg);
 			response.shouldEndSession(false);
-			response.session(STAGE_KEY,DONE);
+			response.session(STAGE_KEY,DIRECTION);
 			response.session(SESSION_KEY,recipe_helper);
 			response.send();
 
 		}else{
 			msg = recipe_helper.steps[recipe_helper.currentStep];
 			recipe_helper.currentStep++;
-			response.session(SESSION_KEY,recipe_helper);
-			response.session(STAGE_KEY,DIRECTION);
+			if(recipe_helper.complete()){
+			msg += ". you have finished this recipe. please restart or quit.";
 			response.say(msg);
 			response.shouldEndSession(false);
+			response.session(STAGE_KEY,DIRECTION);
+			response.session(SESSION_KEY,recipe_helper);
 			response.send();
+
+			}else{
+				response.session(SESSION_KEY,recipe_helper);
+				response.session(STAGE_KEY,DIRECTION);
+				response.say(msg);
+				response.shouldEndSession(false);
+				response.send();
+			}
 		}
 	}
   }
@@ -184,13 +195,14 @@ skillService.intent('lastStepIntent', {
   },
   function(request, response) {
   	var stg = getStageHelperFromRequest(request);
-	if(stg !=DIRECTION||stg!=WAIT){
+	if(stg !=DIRECTION&&stg!=WAIT&&stg!=INGREDIENT){
 		handleInvalidCommand(request,response);
 	}else{
 		var recipe_helper = getRecipeHelperFromRequest(request);
+		recipe_helper.currentIngre =0;
 		var msg = "";
 		recipe_helper.currentStep = recipe_helper.steps.length-1;
-		msg = recipe_helper.steps[recipe_helper.currentStep];
+		msg = recipe_helper.steps[recipe_helper.currentStep]+". you are done with this recipe. please start over or quit";
 		recipe_helper.currentStep++;
 		response.session(SESSION_KEY,recipe_helper);
 		response.session(STAGE_KEY,DIRECTION);
@@ -206,15 +218,18 @@ skillService.intent('lastIngreIntent', {
   },
   function(request, response) {
   	var stg = getStageHelperFromRequest(request);
-	if(stg !=INGREDIENT||stg !=WAIT){
+	if(stg !=INGREDIENT&&stg !=WAIT&&stg!=DIRECTION){
 		handleInvalidCommand(request,response);
 	}else{
 		var recipe_helper = getRecipeHelperFromRequest(request);
+
 		var msg = "";
-		recipe_helper.currentIngre = recipe_helper.ingedient.length-1;
-		msg = recipe_helper.ingedient[recipe_helper.currentIngre];
+		recipe_helper.currentIngre = recipe_helper.ingredients.length-1;
+		msg = recipe_helper.ingredients[recipe_helper.currentIngre];
+		msg+=". you are now done with ingredientss. Move on to recipe direction. "
 		recipe_helper.currentIngre++;
 		recipe_helper.currentStep=0;
+		recipe_helper.currentIngre = 0;
 		response.session(SESSION_KEY,recipe_helper);
 		response.session(STAGE_KEY,DIRECTION);
 		response.say(msg);
@@ -230,14 +245,17 @@ skillService.intent('advanceIngreIntent', {
   },
   function(request, response) {
   	var stg = getStageHelperFromRequest(request);
-	if(stg !=INGREDIENT||stg !=WAIT){
+  	// console.log("I FOUND STAGE IN ADVANCEINGRE : "+stg);
+	if(stg !=INGREDIENT&&stg !=WAIT&&stg!=DIRECTION){
 		handleInvalidCommand(request,response);
 	}else{
 		var recipe_helper = getRecipeHelperFromRequest(request);
+		recipe_helper.currentStep=0;
 		var msg = "";
 		if(recipe_helper.completeIngre()){
-			msg = " you have got all the ingredients of  this recipe. Move on to recipe";
+			msg = " . you have got all the ingredients of  this recipe. Move on to recipe";
 			recipe_helper.currentStep = 0;
+			recipe_helper.currentIngre = 0;
 			response.say(msg);
 			response.shouldEndSession(false);
 			response.session(STAGE_KEY,DIRECTION);
@@ -245,13 +263,25 @@ skillService.intent('advanceIngreIntent', {
 			response.send();
 
 		}else{
-			msg = recipe_helper.ingedient[recipe_helper.currentIngre];
+			msg = recipe_helper.ingredients[recipe_helper.currentIngre];
 			recipe_helper.currentIngre++;
+			if(recipe_helper.completeIngre()){
+			msg += ". you have got all the ingredients of  this recipe. Move on to recipe";
+			recipe_helper.currentStep = 0;
+			recipe_helper.currentIngre = 0;
+			response.say(msg);
+			response.shouldEndSession(false);
+			response.session(STAGE_KEY,DIRECTION);
+			response.session(SESSION_KEY,recipe_helper);
+			response.send();
+
+			}else{
 			response.session(SESSION_KEY,recipe_helper);
 			response.session(STAGE_KEY,INGREDIENT);
 			response.say(msg);
 			response.shouldEndSession(false);
 			response.send();
+			}
 		}
 	}
   }
@@ -262,9 +292,9 @@ skillService.intent('backToMainIntent',{
 	function(request,response){
 
 		var stg =START;
-		var msg = " you are done with this recipe."
+		var msg = " . you are done with this recipe."
 		if(getStageHelperFromRequest(request)==START){
-			msg = " you are in the main dialog now. no need to quit.";
+			msg = " . you are in the main dialog now. no need to quit.";
 		}
 		var recipe_helper = resetHelper();
 		response.say(msg);
@@ -284,9 +314,11 @@ skillService.intent('startOverIntent',{
 		var recipe_helper = getRecipeHelperFromRequest(request);
 		if(stg==INGREDIENT){
 			recipe_helper.currentIngre = 0;
+			recipe_helper.currentStep = 0;
 			if(recipe_helper.completeIngre()){
-				msg = "you are done with ingredients. Move on to recipe direction";
+				msg = ". you are done with ingredients. Move on to recipe direction";
 				recipe_helper.currentStep = 0;
+
 				response.say(msg);
 				response.shouldEndSession(false);
 				response.session(STAGE_KEY,DIRECTION);
@@ -295,19 +327,30 @@ skillService.intent('startOverIntent',{
 			}else{
 				msg = recipe_helper.ingredients[0];
 				recipe_helper.currentIngre++;
+				if(recipe_helper.completeIngre()){
+				msg = ". you are done with ingredients. Move on to recipe direction.";
+				recipe_helper.currentStep = 0;
+				recipe_helper.currentIngre =0;
 				response.say(msg);
 				response.shouldEndSession(false);
-				response.session(STAGE_KEY,INGREDIENT);
+				response.session(STAGE_KEY,DIRECTION);
 				response.session(SESSION_KEY,recipe_helper);
 				response.send();
-
+				}else{
+					response.say(msg);
+					response.shouldEndSession(false);
+					response.session(STAGE_KEY,INGREDIENT);
+					response.session(SESSION_KEY,recipe_helper);
+					response.send();
+				}
 			}
 
 
 		}else if (stg == DIRECTION){
 			recipe_helper.currentStep = 0 ;
+			recipe_helper.currentIngre =0 ;
 			if(recipe_helper.complete()){
-				msg = "you are done with this recipe.";
+				msg = ". you are done with this recipe. please start over or quit.";
 				// recipe_helper.currentStep = 0;
 				response.say(msg);
 				response.shouldEndSession(false);
@@ -317,14 +360,28 @@ skillService.intent('startOverIntent',{
 			}else{
 				msg = recipe_helper.steps[0];
 				recipe_helper.currentStep++;
-				response.say(msg);
-				response.shouldEndSession(false);
-				response.session(STAGE_KEY,DIRECTION);
-				response.session(SESSION_KEY,recipe_helper);
-				response.send();
+				
+					if(recipe_helper.complete()){
+						msg += ". you are done with this recipe. please start over or quit ";
+						// recipe_helper.currentStep = 0;
+						response.say(msg);
+						response.shouldEndSession(false);
+						response.session(STAGE_KEY,DIRECTION);
+						response.session(SESSION_KEY,recipe_helper);
+						response.send();
+					}else{
+						// }else{
 
+						response.say(msg);
+						response.shouldEndSession(false);
+						response.session(STAGE_KEY,DIRECTION);
+						response.session(SESSION_KEY,recipe_helper);
+						response.send();
+					}
+
+				}
 			}
-		}else{
+		else{
 			handleInvalidCommand(request,response);
 		}
 		
