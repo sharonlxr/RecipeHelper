@@ -76,7 +76,7 @@ skillService.launch(function(request,response){
 
 skillService.intent('queryIntent', {
 
-	'slot':{"recipeName":"listOfRecipes"},
+	'slots':{"recipeName":"listOfRecipes"},
 	'utterances':["{I'd | I} {like to | want to} make {a|} {-|recipeName}", "recipe for {-|recipeName}"]
 
 
@@ -388,5 +388,5 @@ skillService.intent('startOverIntent',{
 		}
 	);
 module.exports = skillService;
-console.log(skillService.utterances());
-console.log(skillService.schema());
+// console.log(skillService.utterances());
+// console.log(skillService.schema());
