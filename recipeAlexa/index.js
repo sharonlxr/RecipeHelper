@@ -150,7 +150,7 @@ skillService.intent('queryIntent', {
 
 );
 skillService.intent('advanceStepIntent', {
-    'utterances': ['next step','read recipe']
+    'utterances': ['next step','read recipe', 'step']
   },
   function(request, response) {
   	var stg = getStageHelperFromRequest(request);
@@ -241,7 +241,7 @@ skillService.intent('lastIngreIntent', {
 );
 
 skillService.intent('advanceIngreIntent', {
-    'utterances': ['next ingredient','ingredient']
+    'utterances': ['next ingredient','ingredient', 'read ingredient']
   },
   function(request, response) {
   	var stg = getStageHelperFromRequest(request);
@@ -384,9 +384,20 @@ skillService.intent('startOverIntent',{
 		else{
 			handleInvalidCommand(request,response);
 		}
-		
 		}
 	);
+skillService.intent('helpIntent',{
+	'utterances':['help', "what can i say", "what are the commands"]
+		},
+	function(request,response){
+		var msg = "You can say I want to make apple pie. Then ask for next ingredient. After ingredients, ask for next step. You can always restart the process or quit. What do you want to make today?"
+		response.say(msg);
+		response.shouldEndSession(false);
+		// response.session(STAGE_KEY,INGREDIENT);
+		// response.session(SESSION_KEY,recipe_helper);
+		response.send();
+	
+	});
 module.exports = skillService;
-// console.log(skillService.utterances());
-// console.log(skillService.schema());
+console.log(skillService.utterances());
+console.log(skillService.schema());
