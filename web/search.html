@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+	var theUrl = "https://rlpr7wbzwj.execute-api.us-east-1.amazonaws.com/prod/RecipeUpdate"
+    $("#get_button").click(function(){
+	    $.get(theUrl, function(data, status){
+	        alert(JSON.stringify(data))
+	    });
+    });
+    $("#query_button").click(function(){
+        var recname = document.getElementById("name").value;
+        var tb = document.getElementById("tb");
+        $.post(theUrl, JSON.stringify({
+            "type": "QUERY",
+            "data": {
+                "TableName": "Recipes",
+                //Condition for item
+                "FilterExpression": "#y = :y",
+                //Variable for attribute name (think of key). You have to preface the variables with #
+                "ExpressionAttributeNames": {
+                    "#y": "RecipeName",
+                },
+                //Variable for value to attribute. You have to preface the variables with :
+                "ExpressionAttributeValues": {
+                    ":y": recname
+                }
+            }
+        }),
+        //success callback
+        function(data, status) {
+            // alert(JSON.stringify(data))
+            var count = data["Count"];
+            if(count ==0){alert("no such recipe in this application");}else{ 
+                data = data["Items"][0];
+            var name = data["RecipeName"];
+            var steps = data["Directions"];
+            var Ingredients = data["Ingredients"];
+            tb.style.display="table"
+            // alert(tb);
+            tb.rows[0].cells[1].innerHTML=name;
+            tb.rows[1].cells[1].innerHTML=Ingredients.split("\n");
+            // var newstep = steps.replace("\n",".")
+            var st =steps.split("\n")
+            // alert(st.length)
+
+            tb.rows[2].cells[1].innerHTML= st;
+            tb.show();
+
+             // tb..val(name)
+        }
+        }).fail(function(res) {
+            console.log(res)
+        })
+    })
+
+
+
+ 
+});
+</script>
+</head>
+<body>
+
+<div class="get_requests" align = "middle">
+   Search recipe<br>
+    <!-- <button id="get_button">Send an HTTP GET request the entire database</button> -->
+</div>
+<br>
+<div class="post_requests" align ="middle">
+    <!-- POST Requests<br> -->
+    <!-- <button id="query_button">Send an HTTP POST request for querying a specific item</button> -->
+    <!-- <button id="post_button">Send an HTTP POST request to a page</button> -->
+    Recipe Name: <input type="text" id="name"><br>
+   <!--  Steps : <textarea rows="4" cols="50" id= "stepInput">
+    </textarea><br>
+    Ingredients : <textarea rows="1" cols="50" id = "ingreInput">
+    </textarea><br>
+    Image :  <input type="file" id="pic" accept="image/*"> -->
+    <button id="query_button">Search</button>
+    <!-- <button id="put_button_remove">Send an HTTP PUT request to remove an att</button> -->
+    <!-- <button id="delete_button">Send an HTTP DELETE request to a page</button> -->
+</div>
+<div align="middle">
+<table id = "tb" hidden=true with = "60%">
+    <tr id = "name">
+        <th>Recipe Name: </th>
+            <th></th>
+      <!--   <th> -->
+        <!-- <input type="text" id="recname"> -->
+    <!-- </th> -->
+    </tr>
+    <tr id = "ingre">
+        <th>Ingredients: </th>
+        <th></th>
+    </tr >
+    <tr id = "direction">
+        <th>Directions: </th>
+        <th></th>
+    </tr>
+     <tr id = "images">
+        <th>
+        </th>
+        <th>
+        <img src = "./test.png" width= "25%">
+        </th>
+    </tr>
+</table>
+</div>
+
+</body>
+</html>
