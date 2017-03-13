@@ -77,7 +77,7 @@ skillService.launch(function(request,response){
 skillService.intent('queryIntent', {
 
 	'slot':{"recipeName":"listOfRecipes"},
-	'utterances':["I'd like to make a {recipeName}"]
+	'utterances':["{I'd | I} {like to | want to} make {a|} {-|recipeName}", "recipe for {-|recipeName}"]
 
 
 	},function(request,response){
@@ -134,7 +134,7 @@ skillService.intent('queryIntent', {
 			}else{
 				console.log("we load another recipe ");
 				var newHelper = buildNewHelperWithData(data,request,response);
-				response.say("I have successfully found recipe of "+ data["RecipeName"]);
+				response.say("I have successfully found the recipe of "+ data["RecipeName"]);
 				response.session(STAGE_KEY,WAIT);
 				response.shouldEndSession(false);
 				response.session(SESSION_KEY,newHelper);
@@ -214,7 +214,7 @@ skillService.intent('lastStepIntent', {
   }
 );
 skillService.intent('lastIngreIntent', {
-    'utterances': ['last INGREDIENT']
+    'utterances': ['last ingredient']
   },
   function(request, response) {
   	var stg = getStageHelperFromRequest(request);
@@ -241,7 +241,7 @@ skillService.intent('lastIngreIntent', {
 );
 
 skillService.intent('advanceIngreIntent', {
-    'utterances': ['next INGREDIENT','ingredient']
+    'utterances': ['next ingredient','ingredient']
   },
   function(request, response) {
   	var stg = getStageHelperFromRequest(request);
@@ -305,7 +305,7 @@ skillService.intent('backToMainIntent',{
 		}
 	);
 skillService.intent('startOverIntent',{
-	'utterances':['start again']
+	'utterances':['start again', "restart", "start over"]
 		},
 	function(request,response){
 
@@ -388,5 +388,5 @@ skillService.intent('startOverIntent',{
 		}
 	);
 module.exports = skillService;
-// console.log(skillService.utterances());
-// console.log(skillService.schema());
+console.log(skillService.utterances());
+console.log(skillService.schema());
