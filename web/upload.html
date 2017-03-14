@@ -189,6 +189,13 @@ $(document).ready(function(){
     font-size: 20px;
     margin: 4px 2px;
     }
+
+
+    tiny {
+        font-size: 16px;
+        color: #AAAAAA;
+    }
+
 </style>
 
 </head>
@@ -244,9 +251,11 @@ $(document).ready(function(){
         <!-- <button id="post_button">Send an HTTP POST request to a page</button> -->
         <b>Recipe Name: <input type="text" id="name"><br>
         Steps : <br> 
+        <tiny>Enter the steps of the recipe. Put one step per line.</tiny><br>
         <textarea rows="4" cols="50" id= "stepInput">
         </textarea><br>
-        Ingredients : <br>
+        Ingredients : <br> 
+        <tiny>Enter the ingredients of the recipe. Put one ingredient per line.</tiny><br>
         <textarea rows="1" cols="50" id = "ingreInput">
         </textarea><br>
         Image :  <input type="file" id="pic" accept="image/*">
