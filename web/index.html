@@ -32,18 +32,25 @@ $(document).ready(function(){
                 var td1 = document.createElement('td');
                 var td2 = document.createElement('td');
                 var td3 = document.createElement('td');
+                var td4 = document.createElement('td');
                 var link = "./search.html?RecipeName="+name;
                 var link2 = "./ingre.html?RecipeName="+name;
                 var a = document.createElement('a');
                 var a2 = document.createElement('a');
                 a.setAttribute('href',link);
                 a2.setAttribute('href',link2);
+                //icon for ingredients 
                  var image = document.createElement('img');
                  image .setAttribute('src','./test.png');
                  image.setAttribute('width','15px');
+                 //icon for list
                  var image2 = document.createElement('img');
                  image2.setAttribute('src','./test.png');
                  image2.setAttribute('width','15px');
+                 //img for the recipes
+                var image3 = document.createElement('img');
+                 image3.setAttribute('src','./test.png');
+                 image3.setAttribute('width','15px');
                  a.appendChild(image);
                 a2.appendChild(image2);
                
@@ -55,9 +62,11 @@ $(document).ready(function(){
                 td1.appendChild(text1);
                 td2.appendChild(a);
                 td3.appendChild(a2);
+                td4.appendChild(image3);
                 tr.appendChild(td1);
                 tr.appendChild(td2);
                 tr.appendChild(td3);
+                tr.appendChild(td4);
                 table.appendChild(tr);
             }
             document.body.appendChild(table);
