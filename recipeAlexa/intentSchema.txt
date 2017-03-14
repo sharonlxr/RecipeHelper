@@ -1,0 +1,34 @@
+{
+   "intents": [
+      {
+         "intent": "queryIntent",
+         "slots": [
+            {
+               "name": "recipeName",
+               "type": "listOfRecipes"
+            }
+         ]
+      },
+      {
+         "intent": "advanceStepIntent"
+      },
+      {
+         "intent": "lastStepIntent"
+      },
+      {
+         "intent": "lastIngreIntent"
+      },
+      {
+         "intent": "advanceIngreIntent"
+      },
+      {
+         "intent": "backToMainIntent"
+      },
+      {
+         "intent": "startOverIntent"
+      },
+      {
+         "intent": "helpIntent"
+      }
+   ]
+}

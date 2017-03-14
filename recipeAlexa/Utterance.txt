@@ -1,0 +1,30 @@
+queryIntent    I'd like to make a {recipeName}
+queryIntent    I like to make a {recipeName}
+queryIntent    I'd want to make a {recipeName}
+queryIntent    I want to make a {recipeName}
+queryIntent    I'd like to make {recipeName}
+queryIntent    I like to make {recipeName}
+queryIntent    I'd want to make {recipeName}
+queryIntent    I want to make {recipeName}
+queryIntent    recipe for {recipeName}
+advanceStepIntent    next step
+advanceStepIntent    read recipe
+advanceStepIntent    step
+lastStepIntent    last step
+lastIngreIntent    last ingredient
+advanceIngreIntent    next ingredient
+advanceIngreIntent    ingredient
+advanceIngreIntent    read ingredient
+backToMainIntent    quit
+backToMainIntent    exit
+backToMainIntent    main menu
+backToMainIntent    return to main menu
+backToMainIntent    go back to main menu
+backToMainIntent    go back
+startOverIntent    start again
+startOverIntent    restart
+startOverIntent    start over
+startOverIntent    start
+helpIntent    help
+helpIntent    what can i say
+helpIntent    what are the commands
