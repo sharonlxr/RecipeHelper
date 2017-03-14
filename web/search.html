@@ -9,7 +9,7 @@
 <script>
 $(document).ready(function(){
     // alert("here");
-	var theUrl = "https://rlpr7wbzwj.execute-api.us-east-1.amazonaws.com/prod/RecipeUpdate";
+    var theUrl = "https://rlpr7wbzwj.execute-api.us-east-1.amazonaws.com/prod/RecipeUpdate";
       function processForm(){
   // {var theUrl = "https://rlpr7wbzwj.execute-api.us-east-1.amazonaws.com/prod/RecipeUpdate";
     var parameters = location.search.substring(1).split("&");
@@ -17,11 +17,12 @@ $(document).ready(function(){
     l = unescape(temp[1]);
     // alert(l); //Dialog with the text you put on the textbox
     if(l===undefined){
-        alert("no such recipe can be found");
-    }
-    display(l);
+        // alert("no such recipe can be found");
+    }else{
+    display(l);}
 
     };
+    processForm();
     function display(recname){
         
         // var recname = document.getElementById("name").value;
@@ -48,7 +49,7 @@ $(document).ready(function(){
         function(data, status) {
             // alert(JSON.stringify(data))
             var count = data["Count"];
-            if(count ==0){alert("no such recipe in this application");}else{ 
+            if(count ==0){}else{ 
                 data = data["Items"][0];
             var name = data["RecipeName"];
             var steps = data["Directions"];
@@ -71,12 +72,11 @@ $(document).ready(function(){
         })
     
     }
-  processForm();
  
     $("#get_button").click(function(){
-	    $.get(theUrl, function(data, status){
-	        alert(JSON.stringify(data))
-	    });
+        $.get(theUrl, function(data, status){
+            alert(JSON.stringify(data))
+        });
     });
     $("#query_button").click(function(){
         var recname = document.getElementById("name").value;
