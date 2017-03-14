@@ -23,6 +23,32 @@ $(document).ready(function(){
             // var tr = [];
 
             var table = document.createElement('table');
+            table.className = 'table';
+            var tr = document.createElement('tr');
+            var td4 = document.createElement('th');
+            var td5 = document.createElement('th');
+            var td6 = document.createElement('th');
+            var td7 = document.createElement('th');
+            var name = "Recipe Name";
+            var steps = "Directions";
+            var ingres= "Ingredients";
+            var pic= "Picture";
+            var text1 = document.createTextNode(name);
+                var text2 = document.createTextNode(steps);
+                var text3 = document.createTextNode(ingres);
+                var text4 = document.createTextNode(pic);
+
+            td4.appendChild(text1);
+            td5.appendChild(text2);
+            td6.appendChild(text3);
+            td7.appendChild(text4);
+            tr.appendChild(td4);
+                tr.appendChild(td5);
+                tr.appendChild(td6);
+                tr.appendChild(td7);
+
+                table.appendChild(tr);
+
             for (var i = 1; i < datas.length; i++){
                 var name = datas[i]["RecipeName"];
                 var steps = datas[i]["Directions"];
@@ -50,7 +76,7 @@ $(document).ready(function(){
                  //img for the recipes
                 var image3 = document.createElement('img');
                  image3.setAttribute('src','./test.png');
-                 image3.setAttribute('width','50px');
+                 image3.setAttribute('width','100px');
                  a.appendChild(image);
                 a2.appendChild(image2);
                
@@ -81,6 +107,29 @@ $(document).ready(function(){
 });
 </script>
 <html>
+<style>
+    table {
+        font-size: 42px;
+        color: #505050;
+        border: 3px solid #aaaaaa;
+    }
+    tr {
+        font-size: 24px;
+        color: #505050;
+        border: 3px solid #aaaaaa;
+    }
+
+    .button {
+    background-color: #3C763D;
+    border: none;
+    color: white;
+    padding: 15px 30px;
+    text-align: center;
+    display: inline-block;
+    font-size: 20px;
+    margin: 4px 2px;
+    }
+</style>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
@@ -89,7 +138,7 @@ $(document).ready(function(){
     <!--[if IE]>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <![endif]-->
-    <title>Bootstap Template With Video Background</title>
+    <title>Recipe Assistant</title>
     <!-- BOOTSTRAP CORE STYLE CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet" />
     <!-- Font-Awesome Icons Styles -->
@@ -129,7 +178,7 @@ $(document).ready(function(){
 
               
                 <i class="fa fa-plus-square fa-4x"></i>
-									<h3>Add a Receipe</h3>
+									<h3><a href = "upload.html">Add a Receipe</a></h3>
 
                       </div>
             </div>
@@ -139,7 +188,7 @@ $(document).ready(function(){
               
                 <i class="fa fa-search fa-4x" aria-hidden="true"></i>
 
-									<h3>Search Receipes</h3>
+									<h3><a href = "search.html">Search Receipes</a></h3>
 
                       </div>
             </div>
@@ -148,13 +197,16 @@ $(document).ready(function(){
 
               
                 <i class="fa fa-wrench fa-4x"></i>
-									<h3>Settings</h3>
+									<h3><a href = "#">Settings</a></h3>
 
                       </div>
             </div>
         </div>
            </div>
            </section>
+
+
+    
      <table id ="tb"></table>
      <!-- <img src="./test.png" href="./search.html" width = '20px'> -->
      <!-- <form method="GET" action ="./search.html">search</form> -->
@@ -180,8 +232,4 @@ $(document).ready(function(){
     
 </body>
 </html>
-
-<a href="./upload.html">add a recipe</a>
-<br>
-<a href="./search.html">search recipe</a>
 
