@@ -1,56 +1,85 @@
 ﻿<!DOCTYPE html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
 <script>
 $(document).ready(function(){
-    var theUrl = "https://rlpr7wbzwj.execute-api.us-east-1.amazonaws.com/prod/RecipeUpdate"
-    var getallData = function(){
-        $.get(theUrl, function(data, status){
+    var theUrl = "https://rlpr7wbzwj.execute-api.us-east-1.amazonaws.com/prod/RecipeUpdate"
+    var getallData = function(){
+        $.get(theUrl, function(data, status){
+            // alert(JSON.stringify(data))
+            // var data = JSON.stringify(data);
+            // return data;
+            // var res = JSON.parse(data);
+            var datas= (data["Items"]);
+            // alert(datas.length);
+            // var table = document.getElementByID('tb');
+            // var tr = [];
 
-            var datas= (data["Items"]);
-            alert(datas.length);
-            var table = document.getElementByID('tb');
-            var tr = [];
+            var table = document.createElement('table');
+            table.setAttribute('class', 'tg');
+            
+            table.style.width = '90%';
+            // table.style.text-align = 'center';
 
-            var td1 = document.createElement('td');
-            var td2 = document.createElement('td');
+            // table.style.border = '1px solid black';
+            var tr = document.createElement('tr');
+            var td4 = document.createElement('td');
+            var td5 = document.createElement('td');
+            var td6 = document.createElement('td');
+            var name = "RecipeName";
+            var steps = "Directions";
+            var ingres= "Ingredients";
+            var text1 = document.createTextNode(name);
+                var text2 = document.createTextNode(steps);
+                var text3 = document.createTextNode(ingres);
 
-            var text1 = document.createTextNode('Text1');
-            var text2 = document.createTextNode('Text2');
+            td4.appendChild(text1);
+            td5.appendChild(text2);
+            td6.appendChild(text3);
+            tr.appendChild(td4);
+                tr.appendChild(td5);
+                tr.appendChild(td6);
 
-            for (var i = 0; i < datas.length; i++){
-                alert(i);
-                tr[i] = document.createElement('tr');
-                var name = datas[i]["RecipeName"];
-                var steps = datas[i]["Directions"];
-                var ingres = datas[i]["Ingredients"];
-                var td1 = document.createElement('td');
-                var td2 = document.createElement('td');
-                var td3 = document.createElement('td');
-                var text1 = document.createTextNode(name);
-                var text2 = document.createTextNode(steps);
-                var text3 = document.createTextNode(ingres);
-
-
-
-
-                // for (var j = 1; j < 4; j++){
-                    td1.appendChild(text1);
-                    td2.appendChild(text2);
-                    td3.appendChild(text3);
-                    tr[i].appendChild(td1);
-                    tr[i].appendChild(td2);
-                    tr[i].appendChild(td3);
-                // }           
-                table.appendChild(tr[i]);
-
-            }
-
-        });
-    };
-
-   getallData();
+                table.appendChild(tr);
 
 
- 
+            for (var i = 0; i < datas.length; i++){
+                var name = datas[i]["RecipeName"];
+                var steps = datas[i]["Directions"];
+                var ingres = datas[i]["Ingredients"];
+                var tr = document.createElement('tr');   
+                // tr.style.border = '1px solid black';
+
+                var td1 = document.createElement('td');
+                var td2 = document.createElement('td');
+                   var td3 = document.createElement('td');
+                   // td1.style.border = '1px solid black';
+                   // td2.style.border = '1px solid black';
+                   // td3.style.border = '1px solid black';
+
+                var text1 = document.createTextNode(name);
+                var text2 = document.createTextNode(steps);
+                var text3 = document.createTextNode(ingres);
+
+                td1.appendChild(text1);
+                td2.appendChild(text2);
+                td3.appendChild(text3);
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                tr.appendChild(td3);
+
+                table.appendChild(tr);
+
+
+            }
+            document.body.appendChild(table);
+
+   
+        });
+    };
+
+   getallData();
+
 });
 </script>
 
@@ -100,21 +129,21 @@ $(document).ready(function(){
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="text-align: center;">
                 <div class="txt-block">
                 <i class="fa fa-plus-square fa-4x"></i>
-					<h3><a href="./upload/upload.html" style="text-decoration: none;">Add a Receipe</a></h3>
+                    <h3><a href="./upload/upload.html" style="text-decoration: none;">Add a Receipe</a></h3>
                 </div>
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="text-align: center;">
                 <div class="txt-block">
                 <i class="fa fa-search fa-4x" aria-hidden="true"></i>
-					<h3><a href="search/search.html" style="text-decoration: none;">search recipe</a></h3>
+                    <h3><a href="search/search.html" style="text-decoration: none;">search recipe</a></h3>
                 </div>
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="text-align: center;">
                 <div class="txt-block">
                 <i class="fa fa-wrench fa-4x"></i>
-					<h3>Settings</h3>
+                    <h3>Settings</h3>
                 </div>
             </div>
         </div>
@@ -123,7 +152,7 @@ $(document).ready(function(){
 
            </section>
 
-        <table class="tg" align="center">
+        <table class="tg" align="center" id="tb">
             <tr>
                 <th class="tg-yw4l">image</th>
                 <th class="tg-yw4l">name</th>
@@ -131,8 +160,8 @@ $(document).ready(function(){
                 <th class="tg-yw4l">recipe directions</th>
             </tr>
             <tr>
-                <td class="tg-yw4l"></td>
-                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"><img src="assets/img/34.jpg"></td>
+                <td class="tg-yw4l" id="tr1"></td>
                 <td class="tg-yw4l"></td>
                 <td class="tg-yw4l"></td>
             </tr>
@@ -167,6 +196,9 @@ $(document).ready(function(){
                 <td class="tg-yw4l"></td>
             </tr>
         </table>
+
+        <br>
+        <br>
      
 
 
