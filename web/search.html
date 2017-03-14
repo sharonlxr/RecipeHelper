@@ -48,7 +48,7 @@ $(document).ready(function(){
         function(data, status) {
             // alert(JSON.stringify(data))
             var count = data["Count"];
-            if(count ==0){alert("no such recipe in this application");}else{ 
+            if(count ==0){alert("No such recipe in this application");}else{ 
                 data = data["Items"][0];
             var name = data["RecipeName"];
             var steps = data["Directions"];
@@ -71,7 +71,6 @@ $(document).ready(function(){
         })
     
     }
-  processForm();
  
     $("#get_button").click(function(){
 	    $.get(theUrl, function(data, status){
