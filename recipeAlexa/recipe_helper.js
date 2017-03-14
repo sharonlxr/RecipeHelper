@@ -24,7 +24,17 @@ recipeHelper.prototype.setCurrentStep =function(index){
 	this.currentStep = index;
 };
 recipeHelper.prototype.setIngres =function(ingres){
-	this.ingredients = ingres;
+	var i = 0;
+	var res =[];
+	var j = 0;
+	while(i<ingres.length){
+		if(ingres[i].trim()!=""){
+			res[j] = ingres[i];
+			j++;
+		}
+		i++;
+	}
+	this.ingredients = res;
 };
 recipeHelper.prototype.setCurrentIngre = function(index){
 	this.currentIngre = index;

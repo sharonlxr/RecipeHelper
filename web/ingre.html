@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script language="JavaScript">
+
+</script>
+
+<script>
+$(document).ready(function(){
+    // alert("here");
+	var theUrl = "https://rlpr7wbzwj.execute-api.us-east-1.amazonaws.com/prod/RecipeUpdate";
+      function processForm(){
+  // {var theUrl = "https://rlpr7wbzwj.execute-api.us-east-1.amazonaws.com/prod/RecipeUpdate";
+    var parameters = location.search.substring(1).split("&");
+    var temp = parameters[0].split("=");
+    l = unescape(temp[1]);
+    // alert(l); //Dialog with the text you put on the textbox
+    if(l===undefined){
+        alert("no such recipe can be found");
+    }
+    display(l);
+
+    };
+    function display(recname){
+        
+        // var recname = document.getElementById("name").value;
+        // alert("table");
+     
+        // tb/.show();
+        $.post(theUrl, JSON.stringify({
+            "type": "QUERY",
+            "data": {
+                "TableName": "Recipes",
+                //Condition for item
+                "FilterExpression": "#y = :y",
+                //Variable for attribute name (think of key). You have to preface the variables with #
+                "ExpressionAttributeNames": {
+                    "#y": "RecipeName",
+                },
+                //Variable for value to attribute. You have to preface the variables with :
+                "ExpressionAttributeValues": {
+                    ":y": recname
+                }
+            }
+        }),
+        //success callback
+        
+        function(data, status) {
+            // alert(JSON.stringify(data))
+            var count = data["Count"];
+            if(count ==0){alert("no such recipe in this application");}else{ 
+                data = data["Items"][0];
+            var name = data["RecipeName"];
+            var steps = data["Directions"];
+            var Ingredients = data["Ingredients"].split("\n");
+            var table = document.createElement('table');
+            table.setAttribute("align","middle");
+            // alert(Ingredients.length);
+            for(var i = 0 ; i<Ingredients.length;i++){
+                var tr = document.createElement('tr');
+                document.body.appendChild(table);
+                var text1 = document.createTextNode(Ingredients[i]);
+                var td1 = document.createElement('td');
+                td1.appendChild(text1);
+                tr.appendChild(td1);
+
+                table.appendChild(tr);
+            }
+            document.body.appendChild(table);
+           
+    
+
+             // tb..val(name)
+        }
+        }).fail(function(res) {
+            console.log(res)
+        })
+    
+    }
+  processForm();
+ 
+
+
+
+ 
+});
+</script>
+</head>
+<body>
+
+<div class="get_requests" align = "middle">
+   Search recipe<br>
+    <!-- <button id="get_button">Send an HTTP GET request the entire database</button> -->
+</div>
+<br>
+<div class="post_requests" align ="middle">
+    Ingredients
+</div>
+
+</body>
+</html>

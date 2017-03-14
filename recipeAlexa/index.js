@@ -32,6 +32,7 @@ var buildNewHelperWithData = function(data){
 	var helper = getRecipeHelper(argument);
 	var stps = data["Directions"].split("\n");
 	var ingres = data["Ingredients"].split("\n");
+
 	helper.setCurrentStep(0);
 	// recipeHelper.currentStep=0;
 	helper.setCurrentIngre(0);
@@ -72,8 +73,27 @@ skillService.launch(function(request,response){
 	response.session(SESSION_KEY,getStageHelperFromRequest(request));
 	response.send();
 });
+skillService.sessionEnded(function(request,response){
 
+		var stg =START;
+		var msg = " . you are done with this recipe."
+		if(getStageHelperFromRequest(request)==START){
+			msg = " . you are in the main dialog now. no need to quit.";
+		}
+		if(getStageHelperFromRequest(request)==WAIT||
+			getStageHelperFromRequest(request)==INGREDIENT
+			||getStageHelperFromRequest(request)==DIRECTION)
+		var recipe_helper = resetHelper();
+		response.say(msg);
+		response.shouldEndSession(false);
+		response.session(STAGE_KEY,START);
+		response.session(SESSION_KEY,recipe_helper);
+		response.send();
+		
 
+});
+
+// skillService.onSessionEnd
 skillService.intent('queryIntent', {
 
 	'slots':{"recipeName":"listOfRecipes"},
