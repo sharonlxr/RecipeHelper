@@ -78,7 +78,7 @@ skillService.sessionEnded(function(request,response){
 		var stg =START;
 		var msg = " . you are done with this recipe."
 		if(getStageHelperFromRequest(request)==START){
-			msg = " . you are in the main dialog now. no need to quit.";
+			msg = " . you are in the main dialog now. No need to quit.";
 		}
 		if(getStageHelperFromRequest(request)==WAIT||
 			getStageHelperFromRequest(request)==INGREDIENT
@@ -113,18 +113,6 @@ skillService.intent('queryIntent', {
 		}else{
 		console.log("JSON.parse(result)");
 		console.log(result);
-		// result = result.replace(/\\n/g, "\\n")  
-        //        .replace(/\\'/g, "\\'")
-        //        .replace(/\\"/g, '\\"')
-        //        .replace(/\\&/g, "\\&")
-        //        .replace(/\\r/g, "\\r")
-        //        .replace(/\\t/g, "\\t")
-        //        .replace(/\\b/g, "\\b")
-        //        .replace(/\\f/g, "\\f");
-		// result = toString(result);
-		// console.log(result);
-	    // console.log(JSON.parse(result));
-        // return JSON.parse(result);
 		return result
 		}
 
@@ -132,7 +120,7 @@ skillService.intent('queryIntent', {
 		var currentstg = getStageHelperFromRequest(request);
 		if(currentstg == WAIT||currentstg == INGREDIENT||currentstg == DIRECTION){
 			console.log("can not query because we are in a recipe now");
-			var reply = "you should quit current recipe first";
+			var reply = "You should quit the current recipe first.";
 			response.say(reply);
 			response.session(STAGE_KEY,currentstg);
 			response.shouldEndSession(false);
@@ -144,7 +132,7 @@ skillService.intent('queryIntent', {
 		
 			if(data===null){
 				console.log("can not find the recipe and back to start");
-				var msg= "Can not find the recipe";
+				var msg= "I cannot find the recipe. Try a different recipe.";
 				response.say(msg);
 				response.session(STAGE_KEY,START);
 				response.shouldEndSession(false);
@@ -154,7 +142,7 @@ skillService.intent('queryIntent', {
 			}else{
 				console.log("we load another recipe ");
 				var newHelper = buildNewHelperWithData(data,request,response);
-				response.say("I have successfully found the recipe of "+ data["RecipeName"]);
+				response.say("I have successfully found the recipe of "+ data["RecipeName"] + '. You can say ingredient to read the next ingredient in the list. Or say step to read the next step in the list.' );
 				response.session(STAGE_KEY,WAIT);
 				response.shouldEndSession(false);
 				response.session(SESSION_KEY,newHelper);
@@ -181,7 +169,7 @@ skillService.intent('advanceStepIntent', {
 		var msg = "";
 		recipe_helper.currentIngre =0;
 		if(recipe_helper.complete()){
-			msg = " . you have finished this recipe. please restart or quit.";
+			msg = " . you have finished this recipe. Please restart or quit.";
 			response.say(msg);
 			response.shouldEndSession(false);
 			response.session(STAGE_KEY,DIRECTION);
@@ -192,7 +180,7 @@ skillService.intent('advanceStepIntent', {
 			msg = recipe_helper.steps[recipe_helper.currentStep];
 			recipe_helper.currentStep++;
 			if(recipe_helper.complete()){
-			msg += ". you have finished this recipe. please restart or quit.";
+			msg += ". you have finished this recipe. Please restart or quit.";
 			response.say(msg);
 			response.shouldEndSession(false);
 			response.session(STAGE_KEY,DIRECTION);
@@ -222,7 +210,7 @@ skillService.intent('lastStepIntent', {
 		recipe_helper.currentIngre =0;
 		var msg = "";
 		recipe_helper.currentStep = recipe_helper.steps.length-1;
-		msg = recipe_helper.steps[recipe_helper.currentStep]+". you are done with this recipe. please start over or quit";
+		msg = recipe_helper.steps[recipe_helper.currentStep]+". You are done with this recipe. Please start over or quit";
 		recipe_helper.currentStep++;
 		response.session(SESSION_KEY,recipe_helper);
 		response.session(STAGE_KEY,DIRECTION);
@@ -245,7 +233,7 @@ skillService.intent('lastIngreIntent', {
 
 		var msg = "";
 		recipe_helper.currentIngre = recipe_helper.ingredients.length-1;
-		msg = recipe_helper.ingredients[recipe_helper.currentIngre] + ". you are now done with ingredientss. Move on to recipe direction. "；
+		msg = recipe_helper.ingredients[recipe_helper.currentIngre] + ". You are now done with the ingredients. Say step to move on to recipe direction. " ;
 		recipe_helper.currentIngre++;
 		recipe_helper.currentStep=0;
 		recipe_helper.currentIngre = 0;
@@ -272,7 +260,7 @@ skillService.intent('advanceIngreIntent', {
 		recipe_helper.currentStep=0;
 		var msg = "";
 		if(recipe_helper.completeIngre()){
-			msg = " . you have got all the ingredients of  this recipe. Move on to recipe";
+			msg = " . You have all the ingredients of this recipe. Move on to recipe steps by saying step.";
 			recipe_helper.currentStep = 0;
 			recipe_helper.currentIngre = 0;
 			response.say(msg);
@@ -285,7 +273,7 @@ skillService.intent('advanceIngreIntent', {
 			msg = recipe_helper.ingredients[recipe_helper.currentIngre];
 			recipe_helper.currentIngre++;
 			if(recipe_helper.completeIngre()){
-			msg += ". you have got all the ingredients of  this recipe. Move on to recipe";
+			msg += ". You have got all the ingredients of this recipe. Move on to recipe steps by saying step.";
 			recipe_helper.currentStep = 0;
 			recipe_helper.currentIngre = 0;
 			response.say(msg);
@@ -306,14 +294,14 @@ skillService.intent('advanceIngreIntent', {
   }
 );
 skillService.intent('backToMainIntent',{
-	'utterances':['quit','exit','main menu']
+	'utterances':['quit', 'exit', 'main menu', 'return to main menu', 'go back to main menu', 'go back']
 		},
 	function(request,response){
 
 		var stg =START;
-		var msg = " . you are done with this recipe."
+		var msg = " . You are done with this recipe."
 		if(getStageHelperFromRequest(request)==START){
-			msg = " . you are in the main dialog now. no need to quit.";
+			msg = " . You are in the main dialog now. No need to quit.";
 		}
 		var recipe_helper = resetHelper();
 		response.say(msg);
@@ -324,7 +312,7 @@ skillService.intent('backToMainIntent',{
 		}
 	);
 skillService.intent('startOverIntent',{
-	'utterances':['start again', "restart", "start over"]
+	'utterances':['start again', 'restart', 'start over', 'start']
 		},
 	function(request,response){
 
@@ -335,7 +323,7 @@ skillService.intent('startOverIntent',{
 			recipe_helper.currentIngre = 0;
 			recipe_helper.currentStep = 0;
 			if(recipe_helper.completeIngre()){
-				msg = ". you are done with ingredients. Move on to recipe direction";
+				msg = ". You are done with ingredients. Move on to recipe steps by saying step.";
 				recipe_helper.currentStep = 0;
 
 				response.say(msg);
@@ -369,7 +357,7 @@ skillService.intent('startOverIntent',{
 			recipe_helper.currentStep = 0 ;
 			recipe_helper.currentIngre =0 ;
 			if(recipe_helper.complete()){
-				msg = ". you are done with this recipe. please start over or quit.";
+				msg = ". You are done with this recipe. Please start over or quit.";
 				// recipe_helper.currentStep = 0;
 				response.say(msg);
 				response.shouldEndSession(false);
@@ -381,7 +369,7 @@ skillService.intent('startOverIntent',{
 				recipe_helper.currentStep++;
 				
 					if(recipe_helper.complete()){
-						msg += ". you are done with this recipe. please start over or quit ";
+						msg += ". You are done with this recipe. Please start over or quit ";
 						// recipe_helper.currentStep = 0;
 						response.say(msg);
 						response.shouldEndSession(false);
