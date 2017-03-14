@@ -1,4 +1,60 @@
 ﻿<!DOCTYPE html>
+<script>
+$(document).ready(function(){
+    var theUrl = "https://rlpr7wbzwj.execute-api.us-east-1.amazonaws.com/prod/RecipeUpdate"
+    var getallData = function(){
+        $.get(theUrl, function(data, status){
+
+            var datas= (data["Items"]);
+            alert(datas.length);
+            var table = document.getElementByID('tb');
+            var tr = [];
+
+            var td1 = document.createElement('td');
+            var td2 = document.createElement('td');
+
+            var text1 = document.createTextNode('Text1');
+            var text2 = document.createTextNode('Text2');
+
+            for (var i = 0; i < datas.length; i++){
+                alert(i);
+                tr[i] = document.createElement('tr');
+                var name = datas[i]["RecipeName"];
+                var steps = datas[i]["Directions"];
+                var ingres = datas[i]["Ingredients"];
+                var td1 = document.createElement('td');
+                var td2 = document.createElement('td');
+                var td3 = document.createElement('td');
+                var text1 = document.createTextNode(name);
+                var text2 = document.createTextNode(steps);
+                var text3 = document.createTextNode(ingres);
+
+
+
+
+                // for (var j = 1; j < 4; j++){
+                    td1.appendChild(text1);
+                    td2.appendChild(text2);
+                    td3.appendChild(text3);
+                    tr[i].appendChild(td1);
+                    tr[i].appendChild(td2);
+                    tr[i].appendChild(td3);
+                // }           
+                table.appendChild(tr[i]);
+
+            }
+
+        });
+    };
+
+   getallData();
+
+
+ 
+});
+</script>
+
+
 <html>
 <head>
     <meta charset="utf-8" />
@@ -34,7 +90,7 @@
            </div>
             
          </section>
-    <!-- HOME/VEDIO SECTION END-->
+
        <section id="services-sec"  >
 
            
@@ -66,6 +122,51 @@
            </div>
 
            </section>
+
+        <table class="tg" align="center">
+            <tr>
+                <th class="tg-yw4l">image</th>
+                <th class="tg-yw4l">name</th>
+                <th class="tg-yw4l">ingredient list</th>
+                <th class="tg-yw4l">recipe directions</th>
+            </tr>
+            <tr>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+            </tr>
+            <tr>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+            </tr>
+            <tr>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+            </tr>
+            <tr>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+            </tr>
+            <tr>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+            </tr>
+            <tr>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+            </tr>
+        </table>
      
 
 
