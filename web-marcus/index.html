@@ -1,0 +1,218 @@
+﻿<!DOCTYPE html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+    var theUrl = "https://rlpr7wbzwj.execute-api.us-east-1.amazonaws.com/prod/RecipeUpdate"
+    var getallData = function(){
+        $.get(theUrl, function(data, status){
+            // alert(JSON.stringify(data))
+            // var data = JSON.stringify(data);
+            // return data;
+            // var res = JSON.parse(data);
+            var datas= (data["Items"]);
+            // alert(datas.length);
+            // var table = document.getElementByID('tb');
+            // var tr = [];
+
+            var table = document.createElement('table');
+            table.setAttribute('class', 'tg');
+            
+            table.style.width = '90%';
+            // table.style.text-align = 'center';
+
+            // table.style.border = '1px solid black';
+            var tr = document.createElement('tr');
+            var td4 = document.createElement('td');
+            var td5 = document.createElement('td');
+            var td6 = document.createElement('td');
+            var name = "RecipeName";
+            var steps = "Directions";
+            var ingres= "Ingredients";
+            var text1 = document.createTextNode(name);
+                var text2 = document.createTextNode(steps);
+                var text3 = document.createTextNode(ingres);
+
+            td4.appendChild(text1);
+            td5.appendChild(text2);
+            td6.appendChild(text3);
+            tr.appendChild(td4);
+                tr.appendChild(td5);
+                tr.appendChild(td6);
+
+                table.appendChild(tr);
+
+
+            for (var i = 0; i < datas.length; i++){
+                var name = datas[i]["RecipeName"];
+                var steps = datas[i]["Directions"];
+                var ingres = datas[i]["Ingredients"];
+                var tr = document.createElement('tr');   
+                // tr.style.border = '1px solid black';
+
+                var td1 = document.createElement('td');
+                var td2 = document.createElement('td');
+                   var td3 = document.createElement('td');
+                   // td1.style.border = '1px solid black';
+                   // td2.style.border = '1px solid black';
+                   // td3.style.border = '1px solid black';
+
+                var text1 = document.createTextNode(name);
+                var text2 = document.createTextNode(steps);
+                var text3 = document.createTextNode(ingres);
+
+                td1.appendChild(text1);
+                td2.appendChild(text2);
+                td3.appendChild(text3);
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                tr.appendChild(td3);
+
+                table.appendChild(tr);
+
+
+            }
+            document.body.appendChild(table);
+
+   
+        });
+    };
+
+   getallData();
+
+});
+</script>
+
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title>Recipe Assistant</title>
+    <!-- BOOTSTRAP CORE STYLE CSS -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+    <!-- Font-Awesome Icons Styles -->
+    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+     <!-- Pretty Photo For PopUp Styles -->
+    <link href="assets/css/prettyPhoto.css" rel="stylesheet" />
+    <!-- CUSTOM STYLE CSS -->
+    <link href="assets/css/custom.css" rel="stylesheet" />    
+    <!-- GOOGLE FONT -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+
+</head>
+<body  >
+
+     <section id="home-sec"  class="player">
+           <div class="overlay"  >
+               <div class="container" >
+                <div class="row text-center">
+                    <div class="col-md-12">
+                      <h1 >Recipe <i class="fa fa-cutlery fa-2x" aria-hidden="true"></i>  Assistant </h1> 
+
+                    </div>
+                </div>
+                </div>
+           </div>
+            
+         </section>
+
+       <section id="services-sec"  >
+
+           
+            <div class="container basic-set" >
+
+           <div class="row" >
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="text-align: center;">
+                <div class="txt-block">
+                <i class="fa fa-plus-square fa-4x"></i>
+                    <h3><a href="./upload/upload.html" style="text-decoration: none;">Add a Receipe</a></h3>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="text-align: center;">
+                <div class="txt-block">
+                <i class="fa fa-search fa-4x" aria-hidden="true"></i>
+                    <h3><a href="search/search.html" style="text-decoration: none;">search recipe</a></h3>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="text-align: center;">
+                <div class="txt-block">
+                <i class="fa fa-wrench fa-4x"></i>
+                    <h3>Settings</h3>
+                </div>
+            </div>
+        </div>
+
+           </div>
+
+           </section>
+
+        <table class="tg" align="center" id="tb">
+            <tr>
+                <th class="tg-yw4l">image</th>
+                <th class="tg-yw4l">name</th>
+                <th class="tg-yw4l">ingredient list</th>
+                <th class="tg-yw4l">recipe directions</th>
+            </tr>
+            <tr>
+                <td class="tg-yw4l"><img src="assets/img/34.jpg"></td>
+                <td class="tg-yw4l" id="tr1"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+            </tr>
+            <tr>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+            </tr>
+            <tr>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+            </tr>
+            <tr>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+            </tr>
+            <tr>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+            </tr>
+            <tr>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l"></td>
+            </tr>
+        </table>
+
+        <br>
+        <br>
+     
+
+
+    <!-- JAVASCRIPT FILES PLACED AT THE BOTTOM TO REDUCE THE LOADING TIME  -->
+    <!-- CORE JQUERY  -->
+    <script src="assets/js/jquery-1.11.1.js"></script>
+    <!-- BOOTSTRAP SCRIPTS  -->
+    <script src="assets/js/bootstrap.js"></script>
+     <!-- EASING SCROLL SCRIPTS PLUGIN  -->
+    <script src="assets/js/jquery.easing.min.js"></script>
+     <!--SCRIPT FOR NICE LOOKING SCROLLBAR  -->
+    <script src="assets/js/jquery.nicescroll.min.js"></script>
+    <!-- CUSTOM SCRIPTS  -->
+    <script src="assets/js/custom.js"></script>
+    
+</body>
+</html>

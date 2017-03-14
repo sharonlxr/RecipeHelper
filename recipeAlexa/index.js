@@ -245,8 +245,7 @@ skillService.intent('lastIngreIntent', {
 
 		var msg = "";
 		recipe_helper.currentIngre = recipe_helper.ingredients.length-1;
-		msg = recipe_helper.ingredients[recipe_helper.currentIngre];
-		msg+=". you are now done with ingredientss. Move on to recipe direction. "
+		msg = recipe_helper.ingredients[recipe_helper.currentIngre] + ". you are now done with ingredientss. Move on to recipe direction. "；
 		recipe_helper.currentIngre++;
 		recipe_helper.currentStep=0;
 		recipe_helper.currentIngre = 0;
@@ -418,6 +417,10 @@ skillService.intent('helpIntent',{
 		response.send();
 	
 	});
+
+
+
+
 module.exports = skillService;
 console.log(skillService.utterances());
 console.log(skillService.schema());

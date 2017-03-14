@@ -1,0 +1,97 @@
+﻿/* =============================================================
+   GENERAL STYLES
+ ============================================================ */
+body {
+    font-family: 'Open Sans', sans-serif;
+    padding-bottom:72px;
+   
+}
+.basic-set {
+    padding-top:50px;
+    padding-bottom:80px;
+    font-size:18px;
+}
+.head-line {
+    font-size:30px;
+    color:#f00;
+    padding-bottom:60px;
+    text-transform:uppercase;
+    font-weight:800;
+}
+    .head-line span {
+        color:#000;
+    }
+.black-btn {
+    background-color: #000000;
+    border-color: #FF0000;
+}
+    .black-btn:hover {
+        background-color: #000000;
+        border-color: #FF0000;
+    }
+
+/* =============================================================
+   header section
+ ============================================================ */
+#home-sec {
+    height:400px;
+    color:#fff;
+    text-align:center;
+    border-bottom:4px solid #000;
+    background: url('../img/35.jpg');
+}
+    #home-sec .overlay {
+        background-color:rgba(0, 0, 0, 0.8);
+        min-height:400px;
+    }
+    #home-sec h1 {
+        padding-top:80px;
+        font-size:50px;
+        font-weight:900;
+        padding-bottom:30px;
+    }
+        #home-sec h1 i {
+            color:#3c763d;
+        }
+/* =============================================================
+   bottom section
+ ============================================================ */
+.txt-block {
+    padding-bottom:30px;
+}
+
+.col-lg-4 i {
+    display:block;
+    text-align:center
+}
+
+.tg  {
+    border-collapse:collapse;
+    border-spacing:0;
+    font-family: 'Open Sans', sans-serif;
+}
+.tg td{
+    font-family:Arial, sans-serif;
+    font-size:14px;
+    padding:10px 5px;
+    border-style:solid;
+    border-width:1px;
+    overflow:hidden;
+    word-break:normal;
+}
+
+.tg th{
+    font-family:Arial, sans-serif;
+    font-size:14px;
+    font-weight:normal;
+    padding:10px 5px;
+    border-style:solid;
+    border-width:1px;
+    overflow:hidden;
+    word-break:normal;
+}
+.tg .tg-yw4l{
+    vertical-align:top
+}
+
+
