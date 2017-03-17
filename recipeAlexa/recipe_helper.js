@@ -9,10 +9,10 @@ function recipeHelper(obj){
 }
 
 recipeHelper.prototype.complete = function(){
-	return this.currentStep >= (this.steps.length );
+	return this.currentStep >= (this.steps.length - 1);
 };
 recipeHelper.prototype.completeIngre = function(){
-	return this.currentIngre >= (this.ingredients.length);
+	return this.currentIngre >= (this.ingredients.length - 1);
 };
 recipeHelper.prototype.getStep = function(){
 	return this.steps[this.currentStep];
