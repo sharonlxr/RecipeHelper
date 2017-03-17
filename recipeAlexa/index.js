@@ -248,7 +248,7 @@ skillService.intent('lastIngreIntent', {
 		var recipe_helper = getRecipeHelperFromRequest(request);
 		var msg = "";
 		if(recipe_helper.currentIngre<=0){
-			msg = " You have no previous ingredient to retrieve. You have not begun the first step."
+			msg = " You have no previous ingredient to retrieve."
 			response.session(SESSION_KEY,recipe_helper);
 			response.session(STAGE_KEY,INGREDIENT);
 			response.say(msg);
